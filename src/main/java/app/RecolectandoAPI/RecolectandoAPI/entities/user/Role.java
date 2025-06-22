@@ -1,6 +1,6 @@
 package app.RecolectandoAPI.RecolectandoAPI.entities.user;
 
 public enum Role {
-    ADMIN,
-    ASSISTANT
+    ROLE_ADMIN,
+    ROLE_ASSISTANT
 }

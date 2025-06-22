@@ -29,5 +29,5 @@ public class Retrieval {
     private User user; //user who created the collection
 
     @ManyToOne
-    private Sector sector;
+    private Sector sector; //sector where the retrieval was made
 }
