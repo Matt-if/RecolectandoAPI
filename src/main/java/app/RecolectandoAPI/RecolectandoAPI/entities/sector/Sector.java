@@ -2,10 +2,7 @@ package app.RecolectandoAPI.RecolectandoAPI.entities.sector;
 
 import app.RecolectandoAPI.RecolectandoAPI.entities.building.Building;
 import app.RecolectandoAPI.RecolectandoAPI.entities.retrieval.Retrieval;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
@@ -16,6 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class Sector {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;

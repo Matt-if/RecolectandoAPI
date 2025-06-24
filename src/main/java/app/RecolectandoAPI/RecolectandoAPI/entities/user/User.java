@@ -1,11 +1,12 @@
 package app.RecolectandoAPI.RecolectandoAPI.entities.user;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import app.RecolectandoAPI.RecolectandoAPI.entities.retrieval.Retrieval;
 import java.util.List;
@@ -13,8 +14,13 @@ import java.util.Collection;
 
 @Data
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "user")
 public class User implements UserDetails {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(unique = true, nullable = false)
@@ -22,6 +28,10 @@ public class User implements UserDetails {
 
     @Column(nullable = false)
     private String password;
+
+    private String firstname;
+
+    private String lastname;
 
     @Column(nullable = false)
     private Role role;
@@ -31,6 +41,6 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return List.of(new SimpleGrantedAuthority(role.name()));
     }
 }

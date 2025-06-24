@@ -1,10 +1,7 @@
 package app.RecolectandoAPI.RecolectandoAPI.entities.building;
 
 import app.RecolectandoAPI.RecolectandoAPI.entities.sector.Sector;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
@@ -15,6 +12,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class Building {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
