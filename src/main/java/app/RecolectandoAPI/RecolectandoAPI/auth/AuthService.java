@@ -5,14 +5,12 @@ import app.RecolectandoAPI.RecolectandoAPI.entities.user.User;
 import app.RecolectandoAPI.RecolectandoAPI.entities.user.UserRepo;
 import app.RecolectandoAPI.RecolectandoAPI.jwt.JwtService;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.Authenticator;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -37,14 +35,14 @@ public class AuthService {
     public AuthResponse register(RegisterRequest request) {
 
         if (userRepo.findByUsername(request.getUsername()).isPresent()) {
-            throw new RuntimeException("Email ya existe! Elige otro por favor");
+            throw new RuntimeException("Email ya registrado! Elige otro por favor");
         }
 
         User user = buildUser(request);
         userRepo.save(user);
         return AuthResponse.builder()
                 .token(jwtService.getToken(user))
-                .msg("Usuario creado exitosamente")
+                .msg("Usuario registrado exitosamente!")
                 .build();
     }
 
