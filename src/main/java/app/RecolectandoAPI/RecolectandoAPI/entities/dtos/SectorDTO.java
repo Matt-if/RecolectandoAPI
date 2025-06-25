@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -14,5 +16,5 @@ public class SectorDTO implements DTO{
     private String name;
     private boolean deleted;
     private long building_id;
-    private String retrievals;
+    private List<RetrievalDTO> retrievals;
 }

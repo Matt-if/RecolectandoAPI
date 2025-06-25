@@ -11,12 +11,22 @@ public class ToDTO {
                 .id(building.getId())
                 .name(building.getName())
                 .address(building.getAddress())
-                .sectors(building.getSectors_String())
+                .sectors(building.getSectors().stream().map(ToDTO::sector).toList())
                 .build();
     }
 
     public static RetrievalDTO retrieval(Retrieval retrieval){
-        return null;
+        return RetrievalDTO.builder()
+                .id(retrieval.getId())
+                .weight(retrieval.getWeight())
+                .volume(retrieval.getVolume())
+                .observations(retrieval.getObservations())
+                .type(retrieval.getType())
+                .date(retrieval.getDate().toString())
+                .time(retrieval.getTime().toString())
+                .user_id(retrieval.getUser().getId())
+                .sector_id(retrieval.getSector().getId())
+                .build();
     }
 
     public static UserDTO user(User user){
@@ -28,7 +38,7 @@ public class ToDTO {
                 .id(s.getId())
                 .name(s.getName())
                 .building_id(s.getBuilding().getId())
-                .retrievals(s.getRetrievals_String())
+                .retrievals(s.getRetrievals().stream().map(ToDTO::retrieval).toList())
                 .build();
     }
 }

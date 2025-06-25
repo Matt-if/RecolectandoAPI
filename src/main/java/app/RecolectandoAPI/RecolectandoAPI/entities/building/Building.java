@@ -28,10 +28,6 @@ public class Building {
     @OneToMany(mappedBy = "building", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Sector> sectors = new ArrayList<>(); //inicializacion nueva
 
-    public String getSectors_String() {
-        return (sectors == null) ? "" : sectors.toString();
-    }
-
     public void addSector(Sector sector) {
         sector.setBuilding(this);
         sectors.add(sector);

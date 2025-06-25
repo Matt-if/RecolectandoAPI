@@ -1,6 +1,8 @@
 package app.RecolectandoAPI.RecolectandoAPI.entities.building;
 
 import app.RecolectandoAPI.RecolectandoAPI.ApiResponse;
+import app.RecolectandoAPI.RecolectandoAPI.entities.dtos.BuildingDTO;
+import app.RecolectandoAPI.RecolectandoAPI.entities.dtos.DTO;
 import app.RecolectandoAPI.RecolectandoAPI.entities.dtos.ToDTO;
 import app.RecolectandoAPI.RecolectandoAPI.entities.sector.Sector;
 import lombok.RequiredArgsConstructor;
@@ -21,14 +23,15 @@ public class BuildingController {
     private ResponseEntity<ApiResponse> genericErrorResponse(String e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.builder().msg(e).build());
     }
+
     @PostMapping
     public ResponseEntity<ApiResponse> createBuilding(@RequestBody Building building) {
         try {
-            buildingService.create(building);
+            Building b = buildingService.create(building);
             return ResponseEntity.status(HttpStatus.CREATED).body(
                     ApiResponse.builder()
                     .msg("Edificio creado exitosamente")
-                    .data(List.of(ToDTO.building(building)))
+                    //.data(List.of(ToDTO.building(b)))
                     .build()
             );
         }
@@ -45,12 +48,47 @@ public class BuildingController {
             return ResponseEntity.status(HttpStatus.CREATED).body(
                     ApiResponse.builder()
                             .msg("Sector agregado exitosamente")
-                            //.data(ToDTO.sector(sector)) // provoca error porque el sector es creado tarde en el proceso, y el id no se llega a setear.
+                            //.data(List.of(ToDTO.sector(sector))) //provoca error porque se intenta pasar a dto con la variable sector que no corresponde a la agregada.
                             .build()
-            );
+                );
         }
         catch (Exception e) {
             return genericErrorResponse(e.getMessage());
         }
     }
+
+    @GetMapping
+    public ResponseEntity<ApiResponse> listAll() {
+        try {
+            List<DTO> list = buildingService.listAll()
+                    .stream()
+                    .map(ToDTO::building)
+                    .collect(Collectors.toList());
+
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    ApiResponse.builder()
+                            .msg("Listado de edificios exitoso")
+                            .data(list)
+                            .build()
+            );
+        } catch (Exception e) {
+            return genericErrorResponse(e.getMessage());
+        }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse> listNamesAndId(@PathVariable Long id) {
+        try {
+
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    ApiResponse.builder()
+                            .msg("Edificio encontrado!")
+                            .data(List.of(ToDTO.building(buildingService.listById(id))))
+                            .build()
+            );
+        } catch (Exception e) {
+            return genericErrorResponse(e.getMessage());
+        }
+    }
+
 }

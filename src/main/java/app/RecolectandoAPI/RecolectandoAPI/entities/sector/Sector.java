@@ -32,4 +32,9 @@ public class Sector {
     public String getRetrievals_String() {
         return (retrievals == null) ? "" : retrievals.toString();
     }
+
+    @Override
+    public String toString() {
+        return this.name;
+    }
 }

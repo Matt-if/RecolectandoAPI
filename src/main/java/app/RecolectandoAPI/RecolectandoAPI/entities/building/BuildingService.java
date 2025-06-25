@@ -1,9 +1,13 @@
 package app.RecolectandoAPI.RecolectandoAPI.entities.building;
 
+import app.RecolectandoAPI.RecolectandoAPI.entities.dtos.BuildingDTO;
+import app.RecolectandoAPI.RecolectandoAPI.entities.dtos.ToDTO;
 import app.RecolectandoAPI.RecolectandoAPI.entities.sector.Sector;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -11,13 +15,13 @@ import java.util.Optional;
 public class BuildingService {
     private final BuildingRepo buildingRepo;
 
-    public void create(Building building) {
+    public Building create(Building building) {
         try {
             if (buildingRepo.existsByName((building.getName()))) {
                 throw new RuntimeException("El edificio ya existe!");
             }
 
-            buildingRepo.save(building);
+            return buildingRepo.save(building);
         }
         catch (Exception e) {
             throw new RuntimeException("Error al crear el edificio, mas informacion: " + e.getMessage());
@@ -39,6 +43,22 @@ public class BuildingService {
         }
         catch (Exception e) {
             throw new RuntimeException("Error al agregar el sector, mas informacion: " + e.getMessage());
+        }
+    }
+
+    public List<Building> listAll() {
+        try {
+            return buildingRepo.findAll();
+        } catch (Exception e) {
+            throw new RuntimeException("Error al listar edificios: " + e.getMessage());
+        }
+    }
+
+    public Building listById(Long id) {
+        try {
+            return buildingRepo.findById(id).isPresent() ? buildingRepo.findById(id).get() : null;
+        } catch (Exception e) {
+            throw new RuntimeException("Error al listar edificios: " + e.getMessage());
         }
     }
 }

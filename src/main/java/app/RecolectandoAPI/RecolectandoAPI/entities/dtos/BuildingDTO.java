@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -14,5 +16,5 @@ public class BuildingDTO implements DTO{
     private String name;
     private String address;
     private boolean deleted;
-    private String sectors;
+    private List<SectorDTO> sectors; // antes -> String sectors;
 }
