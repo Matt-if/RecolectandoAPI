@@ -16,13 +16,18 @@ public class Building {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(unique = true, nullable = false)
     private String name;
 
     private String address;
 
-    private boolean deleted = false;
+    @Column(nullable = false)
+    private boolean deleted;
 
     @OneToMany(mappedBy = "building")
     private List<Sector> sectors;
+
+    public String getSectors_String() {
+        return (sectors == null) ? "" : sectors.toString();
+    }
 }

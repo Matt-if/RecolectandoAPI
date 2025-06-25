@@ -32,7 +32,9 @@ public class SecurityConfig {
                     .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Enable CORS
                     .csrf(AbstractHttpConfigurer::disable)
                     .authorizeHttpRequests(authRequest -> authRequest
-                            .requestMatchers("/auth/**").permitAll()
+                            .requestMatchers("/**").permitAll()
+                            //.requestMatchers("/api/v1/auth/**").permitAll()
+                            //.requestMatchers("/buildings/**").hasRole("ASSISTANT")
                             .anyRequest().authenticated()
                     )
                     // .formLogin(Customizer.withDefaults()) //lo que se usaria por defecto de springboot security para autenticar

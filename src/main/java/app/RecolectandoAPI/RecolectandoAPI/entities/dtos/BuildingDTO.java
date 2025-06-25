@@ -1,20 +1,18 @@
 package app.RecolectandoAPI.RecolectandoAPI.entities.dtos;
 
-import app.RecolectandoAPI.RecolectandoAPI.entities.user.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDTO {
+public class BuildingDTO implements DTO{
     private Long id;
-    private String username;
-    private String firstname;
-    private String lastname;
-    private Role role;
+    private String name;
+    private String address;
+    private boolean deleted;
+    private String sectors;
 }
