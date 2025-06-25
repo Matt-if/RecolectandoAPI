@@ -17,13 +17,19 @@ public class Sector {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true, nullable = false)
     private String name;
 
-    private boolean deleted = false;
+    @Column(nullable = false)
+    private boolean deleted;
 
     @ManyToOne
     private Building building;
 
     @OneToMany(mappedBy = "sector")
     private List<Retrieval> retrievals;
+
+    public String getRetrievals_String() {
+        return (retrievals == null) ? "" : retrievals.toString();
+    }
 }

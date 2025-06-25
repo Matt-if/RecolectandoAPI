@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -24,10 +25,19 @@ public class Building {
     @Column(nullable = false)
     private boolean deleted;
 
-    @OneToMany(mappedBy = "building")
-    private List<Sector> sectors;
+    @OneToMany(mappedBy = "building", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Sector> sectors = new ArrayList<>(); //inicializacion nueva
 
     public String getSectors_String() {
         return (sectors == null) ? "" : sectors.toString();
+    }
+
+    public void addSector(Sector sector) {
+        sector.setBuilding(this);
+        sectors.add(sector);
+    }
+
+    public boolean isSectorAlreadyAdded(String sectorName) {
+        return sectors.stream().anyMatch(sector -> sector.getName().equalsIgnoreCase(sectorName));
     }
 }

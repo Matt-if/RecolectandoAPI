@@ -2,6 +2,7 @@ package app.RecolectandoAPI.RecolectandoAPI.entities.dtos;
 
 import app.RecolectandoAPI.RecolectandoAPI.entities.building.Building;
 import app.RecolectandoAPI.RecolectandoAPI.entities.retrieval.Retrieval;
+import app.RecolectandoAPI.RecolectandoAPI.entities.sector.Sector;
 import app.RecolectandoAPI.RecolectandoAPI.entities.user.User;
 
 public class ToDTO {
@@ -20,5 +21,14 @@ public class ToDTO {
 
     public static UserDTO user(User user){
         return null;
+    }
+
+    public static SectorDTO sector (Sector s) {
+        return SectorDTO.builder()
+                .id(s.getId())
+                .name(s.getName())
+                .building_id(s.getBuilding().getId())
+                .retrievals(s.getRetrievals_String())
+                .build();
     }
 }
