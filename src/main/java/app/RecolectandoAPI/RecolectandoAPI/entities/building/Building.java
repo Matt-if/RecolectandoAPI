@@ -10,6 +10,7 @@ import java.util.List;
 @Data
 @Entity
 @RequiredArgsConstructor
+@Table(name = "buildings")
 public class Building {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

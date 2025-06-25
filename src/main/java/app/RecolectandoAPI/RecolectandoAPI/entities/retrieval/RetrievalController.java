@@ -5,7 +5,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/collections")
+@RequestMapping("/retrievals")
 @RequiredArgsConstructor
 public class RetrievalController {
+    private final RetrievalService retrievalService;
+
+
 }

@@ -4,11 +4,15 @@ import app.RecolectandoAPI.RecolectandoAPI.entities.sector.Sector;
 import app.RecolectandoAPI.RecolectandoAPI.entities.user.User;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
+
 import java.time.LocalTime;
 import java.util.Date;
 
 @Data
 @Entity
+@RequiredArgsConstructor
+@Table(name = "retrievals")
 public class Retrieval {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,6 +23,9 @@ public class Retrieval {
     private double weight;
 
     private String observations;
+
+    @Column(nullable = false)
+    private RetrievalType type;
 
     @Column(nullable = false)
     private Date date; // for dd-MM-yyyy

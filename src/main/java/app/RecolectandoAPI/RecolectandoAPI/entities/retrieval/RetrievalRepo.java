@@ -1,4 +1,6 @@
 package app.RecolectandoAPI.RecolectandoAPI.entities.retrieval;
 
-public interface RetrievalRepo {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface RetrievalRepo extends JpaRepository<Retrieval, Long> {
 }
