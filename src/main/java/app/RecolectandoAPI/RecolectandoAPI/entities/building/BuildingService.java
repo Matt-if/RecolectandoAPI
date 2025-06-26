@@ -4,6 +4,7 @@ import app.RecolectandoAPI.RecolectandoAPI.entities.dtos.BuildingDTO;
 import app.RecolectandoAPI.RecolectandoAPI.entities.dtos.ToDTO;
 import app.RecolectandoAPI.RecolectandoAPI.entities.sector.Sector;
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.simple.internal.SimpleProvider;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -59,6 +60,15 @@ public class BuildingService {
             return buildingRepo.findById(id).isPresent() ? buildingRepo.findById(id).get() : null;
         } catch (Exception e) {
             throw new RuntimeException("Error al listar edificios: " + e.getMessage());
+        }
+    }
+
+    public List<Sector> getSectors(Long id) {
+        try {
+            return buildingRepo.findById(id).isPresent() ? buildingRepo.findById(id).get().getSectors() : null;
+
+        } catch (Exception e) {
+            throw new RuntimeException("Error al listar sectores: " + e.getMessage());
         }
     }
 }

@@ -1,8 +1,8 @@
 package app.RecolectandoAPI.RecolectandoAPI.entities.building;
 
 import app.RecolectandoAPI.RecolectandoAPI.ApiResponse;
-import app.RecolectandoAPI.RecolectandoAPI.entities.dtos.BuildingDTO;
 import app.RecolectandoAPI.RecolectandoAPI.entities.dtos.DTO;
+import app.RecolectandoAPI.RecolectandoAPI.entities.dtos.SectorSummaryDTO;
 import app.RecolectandoAPI.RecolectandoAPI.entities.dtos.ToDTO;
 import app.RecolectandoAPI.RecolectandoAPI.entities.sector.Sector;
 import lombok.RequiredArgsConstructor;
@@ -10,8 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @RestController
@@ -40,8 +40,8 @@ public class BuildingController {
         }
     }
 
-    @PostMapping("/{id}/addSector")
-    public ResponseEntity<ApiResponse> addSector(@PathVariable Long id, @RequestBody Sector sector) {
+    @PostMapping("/{id}/sector")
+    public ResponseEntity<ApiResponse> addSectorToBuilding(@PathVariable Long id, @RequestBody Sector sector) {
 
         try {
             buildingService.addSector(id, sector);
@@ -57,12 +57,47 @@ public class BuildingController {
         }
     }
 
+    @GetMapping("/{id}/sector")
+    public ResponseEntity<ApiResponse> listSummarySectorsFromBuilding(@PathVariable Long id) {
+
+        try {
+            List<DTO> sectores = buildingService.getSectors(id).stream()
+                    .map(ToDTO::summarySector)
+                    .collect(Collectors.toList());
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(
+                    ApiResponse.builder()
+                            .msg("Sectores listados exitosamente")
+                            .data(sectores)
+                            .build()
+            );
+        }
+        catch (Exception e) {
+            return genericErrorResponse(e.getMessage());
+        }
+    }
+
+    /*
+    ----- This is new for me ! -------
+    Function<Building, DTO>: is a functional interface that takes a Building and returns a DTO.
+
+    ToDTO::completeBuilding and ToDTO::summaryBuilding are both compatible with Function<Building, DTO>, so you can pass them directly.
+     */
     @GetMapping
-    public ResponseEntity<ApiResponse> listAll() {
+    public ResponseEntity<ApiResponse> listAllCompleteBuildings() {
+        return listAllBuildings(ToDTO::completeBuilding);
+    }
+
+    @GetMapping("/summary")
+    public ResponseEntity<ApiResponse> listAllSummaryBuildings() {
+        return listAllBuildings(ToDTO::summaryBuilding);
+    }
+
+    private ResponseEntity<ApiResponse> listAllBuildings(Function<Building, DTO> mapper) {
         try {
             List<DTO> list = buildingService.listAll()
                     .stream()
-                    .map(ToDTO::building)
+                    .map(mapper)
                     .collect(Collectors.toList());
 
             return ResponseEntity.status(HttpStatus.OK).body(
@@ -77,13 +112,13 @@ public class BuildingController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse> listNamesAndId(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse> listOneCompleteBuilding(@PathVariable Long id) {
         try {
 
             return ResponseEntity.status(HttpStatus.OK).body(
                     ApiResponse.builder()
                             .msg("Edificio encontrado!")
-                            .data(List.of(ToDTO.building(buildingService.listById(id))))
+                            .data(List.of(ToDTO.completeBuilding(buildingService.listById(id))))
                             .build()
             );
         } catch (Exception e) {
