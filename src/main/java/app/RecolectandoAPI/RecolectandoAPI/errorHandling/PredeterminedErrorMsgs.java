@@ -1,4 +1,4 @@
-package app.RecolectandoAPI.RecolectandoAPI.errorMsgs;
+package app.RecolectandoAPI.RecolectandoAPI.errorHandling;
 
 import app.RecolectandoAPI.RecolectandoAPI.ApiResponse;
 import org.springframework.http.HttpStatus;

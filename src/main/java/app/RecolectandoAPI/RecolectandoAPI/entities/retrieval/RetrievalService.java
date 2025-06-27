@@ -8,6 +8,8 @@ import app.RecolectandoAPI.RecolectandoAPI.entities.user.UserRepo;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class RetrievalService {
@@ -15,7 +17,7 @@ public class RetrievalService {
     private final UserRepo userRepo;
     private final SectorRepo sectorRepo;
 
-    public Retrieval save(RetrievalDTO retrievalDto) {
+    public Retrieval create(RetrievalDTO retrievalDto) {
 
         User user = userRepo.findById(retrievalDto.getUser_id())
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -35,5 +37,14 @@ public class RetrievalService {
                 .build();
 
         return retrievalRepo.save(retrieval);
+    }
+
+    public List<Retrieval> listAll() {
+        try {
+            return retrievalRepo.findAll();
+        }
+         catch (Exception e) {
+            throw new RuntimeException("Error al listar recolecciones: " + e.getMessage());
+        }
     }
 }

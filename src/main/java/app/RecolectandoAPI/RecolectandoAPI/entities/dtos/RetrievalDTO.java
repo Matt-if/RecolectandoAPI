@@ -13,7 +13,7 @@ import java.time.LocalTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RetrievalDTO {
+public class RetrievalDTO implements DTO{
     private Long id;
     private double weight;
     private double volume;

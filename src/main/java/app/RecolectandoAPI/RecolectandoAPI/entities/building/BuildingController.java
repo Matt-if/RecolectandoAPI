@@ -4,7 +4,7 @@ import app.RecolectandoAPI.RecolectandoAPI.ApiResponse;
 import app.RecolectandoAPI.RecolectandoAPI.entities.dtos.DTO;
 import app.RecolectandoAPI.RecolectandoAPI.entities.dtos.ToDTO;
 import app.RecolectandoAPI.RecolectandoAPI.entities.sector.Sector;
-import app.RecolectandoAPI.RecolectandoAPI.errorMsgs.PredeterminedErrorMsgs;
+import app.RecolectandoAPI.RecolectandoAPI.errorHandling.PredeterminedErrorMsgs;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,15 +1,17 @@
 package app.RecolectandoAPI.RecolectandoAPI.entities.retrieval;
 
 import app.RecolectandoAPI.RecolectandoAPI.ApiResponse;
+import app.RecolectandoAPI.RecolectandoAPI.entities.dtos.DTO;
 import app.RecolectandoAPI.RecolectandoAPI.entities.dtos.RetrievalDTO;
-import app.RecolectandoAPI.RecolectandoAPI.errorMsgs.PredeterminedErrorMsgs;
+import app.RecolectandoAPI.RecolectandoAPI.entities.dtos.ToDTO;
+import app.RecolectandoAPI.RecolectandoAPI.errorHandling.PredeterminedErrorMsgs;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/retrievals")
@@ -21,11 +23,29 @@ public class RetrievalController {
     @PostMapping()
     public ResponseEntity<ApiResponse> createRetrieval(@RequestBody RetrievalDTO retrievalDto) {
         try {
-            Retrieval r = retrievalService.save(retrievalDto);
+            Retrieval r = retrievalService.create(retrievalDto);
             return ResponseEntity.status(HttpStatus.OK)
                     .body(ApiResponse.builder()
                             .msg("Recoleccion creada exitosamente").build());
 
+        }
+        catch (Exception e) {
+            return PredeterminedErrorMsgs.badRequestResponse((e.getMessage()));
+        }
+    }
+
+    @GetMapping
+    public ResponseEntity<ApiResponse> listAllRetrievals() {
+        try {
+            List<DTO> list = retrievalService.listAll().stream()
+                    .map(ToDTO::retrieval)
+                    .collect(Collectors.toList());
+
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(ApiResponse.builder()
+                            .msg("Listado de recolecciones exitoso")
+                            .data(list)
+                    .build());
         }
         catch (Exception e) {
             return PredeterminedErrorMsgs.badRequestResponse((e.getMessage()));
