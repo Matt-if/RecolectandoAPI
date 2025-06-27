@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,6 +47,23 @@ public class RetrievalController {
                             .msg("Listado de recolecciones exitoso")
                             .data(list)
                     .build());
+        }
+        catch (Exception e) {
+            return PredeterminedErrorMsgs.badRequestResponse((e.getMessage()));
+        }
+    }
+    @GetMapping("/types")
+    public ResponseEntity<ApiResponse> listRetrievalTypes() {
+        try {
+            List<DTO> list = Arrays.stream(RetrievalType.values())
+                    .map(ToDTO::retrievalType)
+                    .collect(Collectors.toList());
+
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(ApiResponse.builder()
+                            .msg("Listado de tipos de recoleccion exitoso")
+                            .data(list)
+                            .build());
         }
         catch (Exception e) {
             return PredeterminedErrorMsgs.badRequestResponse((e.getMessage()));

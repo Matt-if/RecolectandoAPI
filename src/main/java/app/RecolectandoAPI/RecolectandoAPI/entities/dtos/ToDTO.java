@@ -2,6 +2,7 @@ package app.RecolectandoAPI.RecolectandoAPI.entities.dtos;
 
 import app.RecolectandoAPI.RecolectandoAPI.entities.building.Building;
 import app.RecolectandoAPI.RecolectandoAPI.entities.retrieval.Retrieval;
+import app.RecolectandoAPI.RecolectandoAPI.entities.retrieval.RetrievalType;
 import app.RecolectandoAPI.RecolectandoAPI.entities.sector.Sector;
 import app.RecolectandoAPI.RecolectandoAPI.entities.user.User;
 
@@ -49,6 +50,12 @@ public class ToDTO {
                 .time(retrieval.getTime())
                 .user_id(retrieval.getUser().getId())
                 .sector_id(retrieval.getSector().getId())
+                .build();
+    }
+
+    public static RetrievalTypeDTO retrievalType(RetrievalType r) {
+        return RetrievalTypeDTO.builder()
+                .type(r.name())
                 .build();
     }
 

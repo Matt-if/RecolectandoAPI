@@ -1,5 +1,6 @@
 package app.RecolectandoAPI.RecolectandoAPI.auth;
 
+import app.RecolectandoAPI.RecolectandoAPI.entities.user.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,5 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class AuthResponse {
     String token;
+    Long id;
+    Role role;
     String msg;
 }

@@ -53,7 +53,7 @@ public class BuildingController {
         }
     }
 
-    @GetMapping("/{id}/sector")
+    @GetMapping("/{id}/sector/summary")
     public ResponseEntity<ApiResponse> listSummarySectorsFromBuilding(@PathVariable Long id) {
 
         try {
