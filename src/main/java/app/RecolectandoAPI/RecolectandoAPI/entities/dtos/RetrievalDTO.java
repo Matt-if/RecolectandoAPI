@@ -6,6 +6,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -16,8 +19,8 @@ public class RetrievalDTO {
     private double volume;
     private String observations;
     private RetrievalType type;
-    private String date;
-    private String time;
+    private LocalDate date;
+    private LocalTime time;
     private long user_id;
     private long sector_id;
 }

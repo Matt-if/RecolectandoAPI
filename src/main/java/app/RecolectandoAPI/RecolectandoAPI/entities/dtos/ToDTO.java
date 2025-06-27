@@ -45,8 +45,8 @@ public class ToDTO {
                 .volume(retrieval.getVolume())
                 .observations(retrieval.getObservations())
                 .type(retrieval.getType())
-                .date(retrieval.getDate().toString())
-                .time(retrieval.getTime().toString())
+                .date(retrieval.getDate())
+                .time(retrieval.getTime())
                 .user_id(retrieval.getUser().getId())
                 .sector_id(retrieval.getSector().getId())
                 .build();

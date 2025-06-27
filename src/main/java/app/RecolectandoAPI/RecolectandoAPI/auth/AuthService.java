@@ -52,7 +52,7 @@ public class AuthService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .firstname(request.getFirstname())
                 .lastname(request.getLastname())
-                .role(Role.ASSISTANT)
+                .role(Role.ADMIN)
                 .build();
     }
 }
