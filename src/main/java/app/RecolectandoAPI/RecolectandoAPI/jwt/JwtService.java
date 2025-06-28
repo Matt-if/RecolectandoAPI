@@ -6,6 +6,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import app.RecolectandoAPI.RecolectandoAPI.entities.user.User;
+import app.RecolectandoAPI.RecolectandoAPI.entities.user.UserRepo;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -18,13 +21,20 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
 @Service
+@RequiredArgsConstructor
 public class JwtService {
+    private final UserRepo userRepo;
 
     @Value("${jwt.secret.key}")
     private String SECRET_KEY;
 
     public String getToken(UserDetails user) {
-        return getToken(new HashMap<>(), user); //usamos hashmap para pasar info adicional en el Token
+        User u = userRepo.findByUsername(user.getUsername()).orElseThrow();
+        Map<String, Object> extraClaims = new HashMap<>();
+        extraClaims.put("id", u.getId());
+        extraClaims.put("rol", u.getRole().toString());
+
+        return getToken(extraClaims, user); //usamos hashmap para pasar info adicional en el Token
     }
 
     private String getToken(Map<String,Object> extraClaims, UserDetails user) {
