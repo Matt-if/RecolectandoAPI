@@ -29,6 +29,9 @@ public class Retrieval {
     private String observations;
 
     @Column(nullable = false)
+    private boolean deleted;
+
+    @Column(nullable = false)
     private RetrievalType type;
 
     @Column(nullable = false)

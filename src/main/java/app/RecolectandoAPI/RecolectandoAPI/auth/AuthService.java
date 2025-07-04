@@ -22,8 +22,10 @@ public class AuthService {
 
     public AuthResponse login(LoginRequest request) {
 
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
-        UserDetails user = userRepo.findByUsername(request.getUsername()).orElseThrow();
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())); //si no esta registrado, se eleva una exepcion cuyo msj es "Bad Credentials"
+        User user = userRepo.findByUsername(request.getUsername()).orElseThrow();
+
+        if (user.isDeleted()) { throw new RuntimeException("Este Usuario ha sido eliminado, por favor contacte al administrador para restaurarlo!"); }
 
         String token=jwtService.getToken(user);
         return AuthResponse.builder()

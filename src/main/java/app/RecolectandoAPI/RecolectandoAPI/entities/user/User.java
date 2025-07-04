@@ -34,6 +34,9 @@ public class User implements UserDetails {
     private String lastname;
 
     @Column(nullable = false)
+    private boolean deleted;
+
+    @Column(nullable = false)
     private Role role;
 
     @OneToMany(mappedBy = "user")
