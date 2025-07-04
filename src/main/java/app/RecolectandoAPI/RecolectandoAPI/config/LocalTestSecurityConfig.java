@@ -2,8 +2,10 @@ package app.RecolectandoAPI.RecolectandoAPI.config;
 
 import app.RecolectandoAPI.RecolectandoAPI.jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -21,10 +23,14 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class SecurityConfig {
+@Profile("local")
+public class LocalTestSecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final AuthenticationProvider authProvider;
+
+    @Value("${url.frontLocal}")
+    private String urlFront;
 
     @Bean
     public SecurityFilterChain securityFilterChain (HttpSecurity http) throws Exception {
@@ -33,11 +39,8 @@ public class SecurityConfig {
                     .csrf(AbstractHttpConfigurer::disable)
                     .authorizeHttpRequests(authRequest -> authRequest
                             .requestMatchers("/**").permitAll()
-                            //.requestMatchers("/api/v1/auth/**").permitAll()
-                            //.requestMatchers("/buildings/**").hasRole("ASSISTANT")
                             .anyRequest().authenticated()
                     )
-                    // .formLogin(Customizer.withDefaults()) //lo que se usaria por defecto de springboot security para autenticar
                     .sessionManagement(sessionManager ->
                             sessionManager
                                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -49,7 +52,7 @@ public class SecurityConfig {
         @Bean
         public CorsConfigurationSource corsConfigurationSource() {
             CorsConfiguration configuration = new CorsConfiguration();
-            configuration.setAllowedOrigins(List.of("http://localhost:5173")); // Your frontend URL
+            configuration.setAllowedOrigins(List.of(urlFront)); // Your frontend URL
             configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
             configuration.setAllowedHeaders(List.of("*"));
             configuration.setAllowCredentials(true);
