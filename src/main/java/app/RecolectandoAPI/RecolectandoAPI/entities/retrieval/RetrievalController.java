@@ -39,6 +39,7 @@ public class RetrievalController {
     public ResponseEntity<ApiResponse> listAllRetrievals() {
         try {
             List<DTO> list = retrievalService.listAll().stream()
+                    .filter(retrieval -> !retrieval.isDeleted())
                     .map(ToDTO::retrieval)
                     .collect(Collectors.toList());
 

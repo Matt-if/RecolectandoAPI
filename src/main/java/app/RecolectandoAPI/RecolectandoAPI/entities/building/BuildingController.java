@@ -57,14 +57,14 @@ public class BuildingController {
     public ResponseEntity<ApiResponse> listSummarySectorsFromBuilding(@PathVariable Long id) {
 
         try {
-            List<DTO> sectores = buildingService.getSectors(id).stream()
+            List<DTO> sectors = buildingService.getSectors(id).stream()
                     .map(ToDTO::summarySector)
                     .collect(Collectors.toList());
 
             return ResponseEntity.status(HttpStatus.CREATED).body(
                     ApiResponse.builder()
                             .msg("Sectores listados exitosamente")
-                            .data(sectores)
+                            .data(sectors)
                             .build()
             );
         }
