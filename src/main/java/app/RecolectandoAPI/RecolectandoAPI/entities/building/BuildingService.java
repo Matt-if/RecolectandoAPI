@@ -3,7 +3,6 @@ package app.RecolectandoAPI.RecolectandoAPI.entities.building;
 import app.RecolectandoAPI.RecolectandoAPI.entities.sector.Sector;
 import app.RecolectandoAPI.RecolectandoAPI.entities.sector.SectorRepo;
 import lombok.RequiredArgsConstructor;
-import org.antlr.v4.runtime.misc.LogManager;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,11 +17,12 @@ public class BuildingService {
     public Building create(Building building) {
         try {
             Building b = buildingRepo.findByName(building.getName());
+
             if (b != null && !b.isDeleted()) {
                 throw new RuntimeException("El edificio ya existe!");
             }
 
-            if (b != null && b.isDeleted()) {
+            if (b.isDeleted()) {
                 b.setDeleted(false);
                 buildingRepo.save(b);
                 throw new RuntimeException("El edificio estaba eliminado, se recupero y se agrego nuevamente!");
