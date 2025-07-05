@@ -1,6 +1,5 @@
 package app.RecolectandoAPI.RecolectandoAPI.jwt;
 
-import java.security.Key;
 import java.util.Date;
 import java.util.Map;
 import java.util.function.Function;
@@ -26,8 +25,8 @@ public class JwtService {
 
     @Value("${jwt.secret.key}")
     private String SECRET_KEY;
-    @Value("${jwt.token.expiration}")
-    private int TOKEN_EXPIRATION;
+    @Value("${jwt.access-token.expiration}")
+    private int ACCESS_TOKEN_EXPIRATION;
     @Value("${jwt.refresh-token.expiration}")
     private int REFRESH_TOKEN_EXPIRATION;
 
@@ -67,8 +66,8 @@ public class JwtService {
     }
 
     // -------------------------------------------- nuevo ------------------------
-    public String generateToken(User user) {
-        return buildToken(user, TOKEN_EXPIRATION);
+    public String generateAccessToken(User user) {
+        return buildToken(user, ACCESS_TOKEN_EXPIRATION);
     }
 
     public String generateRefreshToken(User user) {
@@ -78,7 +77,7 @@ public class JwtService {
     private String buildToken( final User user, final long expiration) {
         return Jwts.builder()
                 .id(user.getId().toString())
-                .claims(Map.of("rol", user.getRole()))
+                .claims(Map.of("role", user.getRole()))
                 .subject(user.getUsername())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + expiration))

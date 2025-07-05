@@ -27,18 +27,19 @@ public class AuthService {
 
     public AuthResponse login(LoginRequest request) {
 
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())); //si no esta registrado, se eleva una exepcion cuyo msj es "Bad Credentials"
+        //si no esta registrado, se eleva una excepcion
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
         User user = userRepo.findByUsername(request.getUsername()).orElseThrow();
 
-        if (user.isDeleted()) { throw new RuntimeException("Este usuario ha sido eliminado, por favor contacte al administrador!"); }
+        if (user.isDeleted()) { throw new RuntimeException("Este usuario ha sido inhabilitado, por favor contacte al administrador!"); }
 
-        String token = jwtService.generateToken(user);
+        String accessToken = jwtService.generateAccessToken(user);
         String refreshToken = jwtService.generateRefreshToken(user);
         revokeAllUserTokens(user);
         saveUserToken(user, refreshToken);
 
         return AuthResponse.builder()
-                .accessToken(token)
+                .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .msg("Inicio de sesion exitoso!")
                 .build();
@@ -52,7 +53,9 @@ public class AuthService {
 
         User user = buildUser(request);
         User savedUser = userRepo.save(user);
-        String token = jwtService.generateToken(user);
+
+        //sospecho que en un registro, la generacion del token en realidad no es necesaria.
+        String token = jwtService.generateAccessToken(user);
         String refreshToken = jwtService.generateRefreshToken(user);
         this.saveUserToken(savedUser, refreshToken);
 
@@ -60,6 +63,46 @@ public class AuthService {
                 .accessToken(token)
                 .refreshToken(refreshToken)
                 .msg("Usuario registrado exitosamente!")
+                .build();
+    }
+
+    public AuthResponse refreshToken(String authHeader) throws Exception {
+
+        // Extract the refresh token from the "Bearer ..." header
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            throw new RuntimeException("Invalid Bearer token");
+        }
+        String oldRefreshToken = authHeader.substring(7);
+
+        // Validate & extract username
+        String username = jwtService.getUsernameFromToken(oldRefreshToken);
+        if (username == null) {
+            throw new RuntimeException("Invalid refresh token: username claim is missing");
+        }
+        User user = userRepo.findByUsername(username).orElseThrow(
+                () -> new UsernameNotFoundException(username));
+
+        // Verify the refresh token is valid and present in database
+        Token existingToken = tokenRepo.findByToken(oldRefreshToken);
+        if (existingToken == null) throw new RuntimeException("Refresh token not recognized or already used");
+        if (existingToken.isExpired() || existingToken.isRevoked()) throw new RuntimeException("Refresh token is expired or revoked");
+
+        // Invalidate the old refresh token
+        existingToken.setRevoked(true);
+        existingToken.setExpired(true);
+        tokenRepo.save(existingToken);
+
+        // Generate new access & refresh tokens
+        String newAccessToken = jwtService.generateAccessToken(user);
+        String newRefreshToken = jwtService.generateRefreshToken(user);
+
+        // Save new refresh token in database
+        saveUserToken(user, newRefreshToken);
+
+        return AuthResponse.builder()
+                .accessToken(newAccessToken)
+                .refreshToken(newRefreshToken)
+                .msg("Refresh exitoso!")
                 .build();
     }
 
@@ -76,7 +119,7 @@ public class AuthService {
 
     private void revokeAllUserTokens(User user) {
         List<Token> validUserTokens = tokenRepo
-                .findAllValidIsFalseOrRevokedIsFalseByUserId(user.getId());
+                .findAllExpiredIsFalseOrRevokedIsFalseByUserId(user.getId());
         if (!validUserTokens.isEmpty()) {
             for (Token token : validUserTokens) {
                 token.setRevoked(true);
@@ -84,34 +127,6 @@ public class AuthService {
             }
             tokenRepo.saveAll(validUserTokens);
         }
-    }
-
-    public AuthResponse refreshToken(String authHeader) {
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            throw new RuntimeException("Invalid Bearer token");
-        }
-        String refreshToken = authHeader.substring(7);
-        String username = jwtService.getUsernameFromToken(refreshToken);
-
-        if (username == null) {
-            throw new RuntimeException("Invalid refresh token");
-        }
-
-        User user = userRepo.findByUsername(username).orElseThrow(
-                () -> new UsernameNotFoundException(username));
-
-        if (!jwtService.isTokenValid(refreshToken, user)) {
-            throw new RuntimeException("Invalid refresh token");
-        }
-        String accessToken = jwtService.generateToken(user);
-        revokeAllUserTokens(user);
-        saveUserToken(user, accessToken);
-
-        return AuthResponse.builder()
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .msg("Refresh token valido!")
-                .build();
     }
 
     private User buildUser(RegisterRequest request) {

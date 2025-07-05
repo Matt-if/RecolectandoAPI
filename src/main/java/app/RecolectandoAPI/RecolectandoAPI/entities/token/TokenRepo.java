@@ -8,4 +8,6 @@ public interface TokenRepo extends JpaRepository<Token, Long> {
     Token findByToken(String token);
 
     List<Token> findAllValidIsFalseOrRevokedIsFalseByUserId(Long userId);
+
+    List<Token> findAllExpiredIsFalseOrRevokedIsFalseByUserId(Long id);
 }

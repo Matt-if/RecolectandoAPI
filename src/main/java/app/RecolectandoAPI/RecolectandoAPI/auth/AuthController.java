@@ -41,6 +41,7 @@ public class AuthController {
         }
     }
 
+    // Si el usuario recurrio a este endpoint es porque se le expiro el refresh token (el que lo autentica)
     @PostMapping("/refresh")
     public ResponseEntity<AuthResponse> refreshToken(@RequestHeader(HttpHeaders.AUTHORIZATION) final String authHeader) {
         AuthResponse answer = authService.refreshToken(authHeader);
