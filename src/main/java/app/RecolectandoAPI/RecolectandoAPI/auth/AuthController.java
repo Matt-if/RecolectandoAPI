@@ -1,13 +1,13 @@
 package app.RecolectandoAPI.RecolectandoAPI.auth;
 
+import com.nimbusds.oauth2.sdk.TokenRequest;
+import com.nimbusds.oauth2.sdk.TokenResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
@@ -39,5 +39,11 @@ public class AuthController {
         catch (Exception e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(AuthResponse.builder().msg(e.getMessage()).build());
         }
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<AuthResponse> refreshToken(@RequestHeader(HttpHeaders.AUTHORIZATION) final String authHeader) {
+        AuthResponse answer = authService.refreshToken(authHeader);
+        return ResponseEntity.status(HttpStatus.OK).body(answer);
     }
 }

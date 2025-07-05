@@ -2,7 +2,6 @@ package app.RecolectandoAPI.RecolectandoAPI.jwt;
 
 import java.security.Key;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -15,10 +14,10 @@ import org.springframework.stereotype.Service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.*;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+
+import javax.crypto.SecretKey;
 
 @Service
 @RequiredArgsConstructor
@@ -27,49 +26,28 @@ public class JwtService {
 
     @Value("${jwt.secret.key}")
     private String SECRET_KEY;
-
-    public String getToken(UserDetails user) {
-        User u = userRepo.findByUsername(user.getUsername()).orElseThrow();
-        Map<String, Object> extraClaims = new HashMap<>();
-        extraClaims.put("id", u.getId());
-        extraClaims.put("rol", u.getRole().toString());
-
-        return getToken(extraClaims, user); //usamos hashmap para pasar info adicional en el Token
-    }
-
-    private String getToken(Map<String,Object> extraClaims, UserDetails user) {
-        return Jwts
-                .builder()
-                .setClaims(extraClaims)
-                .setSubject(user.getUsername())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis()+1000*60*60*24))
-                .signWith(getKey(), SignatureAlgorithm.HS256)
-                .compact(); // esto crea -y serializa- el Token
-    }
-
-    private Key getKey() {
-        byte[] keyBytes=Decoders.BASE64.decode(SECRET_KEY); // para decodificar la key
-        return Keys.hmacShaKeyFor(keyBytes); // crea una instancia de la secret key
-    }
+    @Value("${jwt.expiration}")
+    private int TOKEN_EXPIRATION;
+    @Value("${jwt.refresh-token.expiration}")
+    private int REFRESH_TOKEN_EXPIRATION;
 
     public String getUsernameFromToken(String token) {
         return getClaim(token, Claims::getSubject);
     }
 
-    public boolean isTokenValid(String token, UserDetails userDetails) {
-        final String username=getUsernameFromToken(token);
-        return (username.equals(userDetails.getUsername())&& !isTokenExpired(token));
+    public boolean isTokenValid(String token, UserDetails user) {
+        final String username = getUsernameFromToken(token);
+        return (username.equals(user.getUsername()) && !isTokenExpired(token));
     }
 
     private Claims getAllClaims(String token)
     {
         return Jwts
-                .parserBuilder()
-                .setSigningKey(getKey())
+                .parser()
+                .verifyWith(getKey())
                 .build()
-                .parseClaimsJws(token)
-                .getBody();
+                .parseSignedClaims(token)
+                .getPayload();
     }
 
     public <T> T getClaim(String token, Function<Claims,T> claimsResolver)
@@ -88,4 +66,28 @@ public class JwtService {
         return getExpiration(token).before(new Date());
     }
 
+    // -------------------------------------------- nuevo ------------------------
+    public String generateToken(User user) {
+        return buildToken(user, TOKEN_EXPIRATION);
+    }
+
+    public String generateRefreshToken(User user) {
+        return buildToken(user, REFRESH_TOKEN_EXPIRATION);
+    }
+
+    private String buildToken( final User user, final long expiration) {
+        return Jwts.builder()
+                .id(user.getId().toString())
+                .claims(Map.of("rol", user.getRole()))
+                .subject(user.getUsername())
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + expiration))
+                .signWith(getKey())
+                .compact(); // esto crea -y serializa- el Token
+    }
+
+    private SecretKey getKey() {
+        byte[] keyBytes=Decoders.BASE64.decode(SECRET_KEY); // para decodificar la key
+        return Keys.hmacShaKeyFor(keyBytes); // crea una instancia de la secret key
+    }
 }

@@ -1,5 +1,6 @@
 package app.RecolectandoAPI.RecolectandoAPI.entities.user;
 
+import app.RecolectandoAPI.RecolectandoAPI.entities.token.Token;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -41,6 +42,9 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user")
     private List<Retrieval> retrievals;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Token> tokens;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
