@@ -32,13 +32,13 @@ public class AuthService {
 
         if (user.isDeleted()) { throw new RuntimeException("Este usuario ha sido eliminado, por favor contacte al administrador!"); }
 
-        String token = jwtService.generateRefreshToken(user);
+        String token = jwtService.generateToken(user);
         String refreshToken = jwtService.generateRefreshToken(user);
         revokeAllUserTokens(user);
         saveUserToken(user, refreshToken);
 
         return AuthResponse.builder()
-                .token(token)
+                .accessToken(token)
                 .refreshToken(refreshToken)
                 .msg("Inicio de sesion exitoso!")
                 .build();
@@ -57,7 +57,7 @@ public class AuthService {
         this.saveUserToken(savedUser, refreshToken);
 
         return AuthResponse.builder()
-                .token(token)
+                .accessToken(token)
                 .refreshToken(refreshToken)
                 .msg("Usuario registrado exitosamente!")
                 .build();
@@ -108,7 +108,7 @@ public class AuthService {
         saveUserToken(user, accessToken);
 
         return AuthResponse.builder()
-                .token(accessToken)
+                .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .msg("Refresh token valido!")
                 .build();
