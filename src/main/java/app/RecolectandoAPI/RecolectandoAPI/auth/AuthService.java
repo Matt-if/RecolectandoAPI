@@ -35,7 +35,7 @@ public class AuthService {
 
         String accessToken = jwtService.generateAccessToken(user);
         String refreshToken = jwtService.generateRefreshToken(user);
-        revokeAllUserTokens(user);
+        revokeAllUserTokens(user); //al revocar todos, se cierra cualquier sesion de cualquier dispositivo donde se haya logueado.
         saveUserToken(user, refreshToken);
 
         return AuthResponse.builder()
@@ -52,16 +52,9 @@ public class AuthService {
         }
 
         User user = buildUser(request);
-        User savedUser = userRepo.save(user);
-
-        //sospecho que en un registro, la generacion del token en realidad no es necesaria.
-        String token = jwtService.generateAccessToken(user);
-        String refreshToken = jwtService.generateRefreshToken(user);
-        this.saveUserToken(savedUser, refreshToken);
+        userRepo.save(user);
 
         return AuthResponse.builder()
-                .accessToken(token)
-                .refreshToken(refreshToken)
                 .msg("Usuario registrado exitosamente!")
                 .build();
     }
