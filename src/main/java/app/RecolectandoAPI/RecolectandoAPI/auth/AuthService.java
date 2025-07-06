@@ -59,7 +59,7 @@ public class AuthService {
                 .build();
     }
 
-    public AuthResponse refreshToken(String authHeader) throws Exception {
+    public AuthResponse refreshToken(String authHeader) {
 
         // Extract the refresh token from the "Bearer ..." header
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
@@ -77,7 +77,7 @@ public class AuthService {
 
         // Verify the refresh token is valid and present in database
         Token existingToken = tokenRepo.findByToken(oldRefreshToken);
-        if (existingToken == null) throw new RuntimeException("Refresh token not recognized or already used");
+        if (existingToken == null) throw new RuntimeException("Refresh token not recognized");
         if (existingToken.isExpired() || existingToken.isRevoked()) throw new RuntimeException("Refresh token is expired or revoked");
 
         // Invalidate the old refresh token

@@ -1,7 +1,5 @@
 package app.RecolectandoAPI.RecolectandoAPI.auth;
 
-import com.nimbusds.oauth2.sdk.TokenRequest;
-import com.nimbusds.oauth2.sdk.TokenResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -41,7 +39,8 @@ public class AuthController {
         }
     }
 
-    // Si el usuario recurrio a este endpoint es porque se le expiro el refresh token (el que lo autentica)
+    // Si el usuario recurrio a este endpoint es porque se le EXPIRO el ACCESS TOKEN
+    // El refresh token debe incluirse en el header: authorization
     @PostMapping("/refresh")
     public ResponseEntity<AuthResponse> refreshToken(@RequestHeader(HttpHeaders.AUTHORIZATION) final String authHeader) {
         AuthResponse answer = authService.refreshToken(authHeader);
