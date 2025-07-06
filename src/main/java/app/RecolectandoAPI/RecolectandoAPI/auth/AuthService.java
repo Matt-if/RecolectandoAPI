@@ -6,6 +6,7 @@ import app.RecolectandoAPI.RecolectandoAPI.entities.user.Role;
 import app.RecolectandoAPI.RecolectandoAPI.entities.user.User;
 import app.RecolectandoAPI.RecolectandoAPI.entities.user.UserRepo;
 import app.RecolectandoAPI.RecolectandoAPI.jwt.JwtService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -59,6 +60,7 @@ public class AuthService {
                 .build();
     }
 
+    @Transactional
     public AuthResponse refreshToken(String authHeader) {
 
         // Extract the refresh token from the "Bearer ..." header

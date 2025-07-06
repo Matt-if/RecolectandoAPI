@@ -43,7 +43,12 @@ public class AuthController {
     // El refresh token debe incluirse en el header: authorization
     @PostMapping("/refresh")
     public ResponseEntity<AuthResponse> refreshToken(@RequestHeader(HttpHeaders.AUTHORIZATION) final String authHeader) {
-        AuthResponse answer = authService.refreshToken(authHeader);
-        return ResponseEntity.status(HttpStatus.OK).body(answer);
+        try {
+            AuthResponse answer = authService.refreshToken(authHeader);
+            return ResponseEntity.status(HttpStatus.OK).body(answer);
+        }
+        catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(AuthResponse.builder().msg(e.getMessage()).build());
+        }
     }
 }
