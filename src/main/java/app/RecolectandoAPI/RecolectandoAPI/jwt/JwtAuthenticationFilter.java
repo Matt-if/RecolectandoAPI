@@ -43,8 +43,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        //Logica de que si el token recibido es de refresh,
-        // no se permite el acceso al recurso.
+        String path = request.getServletPath();
+        if (path.startsWith("/auth/login") || path.startsWith("/auth/refresh")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        //Si el token recibido es de refresh --> no se permite el acceso al recurso.
         String tokenUsage = jwtService.getTokenUsage(token);
         if ("REFRESH".equalsIgnoreCase(tokenUsage)) {
             authEntryPoint.commence(
