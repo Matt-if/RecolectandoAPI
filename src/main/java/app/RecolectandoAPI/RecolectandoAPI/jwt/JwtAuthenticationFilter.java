@@ -1,6 +1,6 @@
 package app.RecolectandoAPI.RecolectandoAPI.jwt;
 
-import io.jsonwebtoken.Claims;
+import app.RecolectandoAPI.RecolectandoAPI.errorHandling.JwtAuthenticationEntryPoint;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,6 +27,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     // Para garantizar que el filtro se ejecute una vez por cada solicitud http, aunque hayan varios filtros en la cadena.
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
+    private final JwtAuthenticationEntryPoint authEntryPoint;
 
     @Override
     protected void doFilterInternal(@NonNull  HttpServletRequest request,
@@ -45,9 +47,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // no se permite el acceso al recurso.
         String tokenUsage = jwtService.getTokenUsage(token);
         if ("REFRESH".equalsIgnoreCase(tokenUsage)) {
-            //response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "No se permite usar refresh tokens para acceder a recursos.");
-            throw new ServletException("No se permite usar refresh tokens para acceder a recursos.");
-            //return;
+            authEntryPoint.commence(
+                    request,
+                    response,
+                    new InsufficientAuthenticationException("No se permite usar refresh tokens para acceder a recursos.")
+            );
+            return;
         }
 
         username=jwtService.getUsernameFromToken(token);

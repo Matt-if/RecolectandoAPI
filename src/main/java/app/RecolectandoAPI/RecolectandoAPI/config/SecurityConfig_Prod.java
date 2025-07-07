@@ -1,5 +1,6 @@
 package app.RecolectandoAPI.RecolectandoAPI.config;
 
+import app.RecolectandoAPI.RecolectandoAPI.errorHandling.JwtAuthenticationEntryPoint;
 import app.RecolectandoAPI.RecolectandoAPI.jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,6 +30,7 @@ public class SecurityConfig_Prod {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final AuthenticationProvider authProvider;
+    private final JwtAuthenticationEntryPoint jwtAuthEntryPoint;
 
     @Value("${url.frontProd}")
     private String urlFront;
@@ -51,6 +53,9 @@ public class SecurityConfig_Prod {
                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authProvider)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint(jwtAuthEntryPoint)
+                )
                 .build();
     }
 
