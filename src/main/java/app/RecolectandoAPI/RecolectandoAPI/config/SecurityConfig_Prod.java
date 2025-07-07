@@ -41,7 +41,7 @@ public class SecurityConfig_Prod {
                 .authorizeHttpRequests(authRequest -> authRequest
                         .requestMatchers("/auth/login", "/auth/refresh").permitAll()
                         .requestMatchers("/auth/register").hasAuthority("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/buildings/**").hasAuthority("USER")
+                        .requestMatchers(HttpMethod.GET, "/buildings/**").authenticated()
                         .requestMatchers(HttpMethod.POST, "/buildings/**").authenticated()
                         .requestMatchers("/retrievals/**").hasAnyAuthority("ADMIN", "USER") // podria dividirse mas para limitar al usuario comun
                         .anyRequest().authenticated()
