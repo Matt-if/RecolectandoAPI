@@ -34,6 +34,10 @@ public class JwtService {
         return getClaim(token, Claims::getSubject);
     }
 
+    public String getTokenUsage(String token) {
+        return getClaim(token, claims -> claims.get("usage", String.class));
+    }
+
     public boolean isTokenValid(String token, UserDetails user) {
         final String username = getUsernameFromToken(token);
         return (username.equals(user.getUsername()) && !isTokenExpired(token));
@@ -67,17 +71,17 @@ public class JwtService {
 
     // -------------------------------------------- nuevo ------------------------
     public String generateAccessToken(User user) {
-        return buildToken(user, ACCESS_TOKEN_EXPIRATION);
+        return buildToken(user, ACCESS_TOKEN_EXPIRATION, "ACCESS");
     }
 
     public String generateRefreshToken(User user) {
-        return buildToken(user, REFRESH_TOKEN_EXPIRATION);
+        return buildToken(user, REFRESH_TOKEN_EXPIRATION, "REFRESH");
     }
 
-    private String buildToken( final User user, final long expiration) {
+    private String buildToken( final User user, final long expiration, String usage) {
         return Jwts.builder()
                 .id(user.getId().toString())
-                .claims(Map.of("role", user.getRole(), "id", user.getId()))
+                .claims(Map.of("role", user.getRole(), "id", user.getId(), "usage", usage))
                 .subject(user.getUsername())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + expiration))

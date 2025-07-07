@@ -39,8 +39,11 @@ public class SecurityConfig_Prod {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Enable CORS
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authRequest -> authRequest
-                        .requestMatchers(HttpMethod.GET, "/buildings/**").hasAnyRole("ADMIN", "USER")
-                        .requestMatchers(HttpMethod.POST, "/buildings/**").hasRole("ADMIN")
+                        .requestMatchers("/auth/login", "/auth/refresh").permitAll()
+                        .requestMatchers("/auth/register").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/buildings/**").hasAuthority("USER")
+                        .requestMatchers(HttpMethod.POST, "/buildings/**").authenticated()
+                        .requestMatchers("/retrievals/**").hasAnyAuthority("ADMIN", "USER") // podria dividirse mas para limitar al usuario comun
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionManager ->

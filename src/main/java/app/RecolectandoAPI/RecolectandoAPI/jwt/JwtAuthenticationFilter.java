@@ -1,5 +1,6 @@
 package app.RecolectandoAPI.RecolectandoAPI.jwt;
 
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,7 +23,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     // OncePerRequestFilter se usa para crear filtros personalizados.
-    // Para garantizar que el filtro se ejecute una vez por cada solicitud http, auqnue hayan varios filtros en la cadena.
+    // Para garantizar que el filtro se ejecute una vez por cada solicitud http, aunque hayan varios filtros en la cadena.
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
 
@@ -38,6 +39,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (token==null) {
             filterChain.doFilter(request, response);
             return;
+        }
+
+        //Logica de que si el token recibido es de refresh,
+        // no se permite el acceso al recurso.
+        String tokenUsage = jwtService.getTokenUsage(token);
+        if ("REFRESH".equalsIgnoreCase(tokenUsage)) {
+            //response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "No se permite usar refresh tokens para acceder a recursos.");
+            throw new ServletException("No se permite usar refresh tokens para acceder a recursos.");
+            //return;
         }
 
         username=jwtService.getUsernameFromToken(token);
@@ -59,8 +69,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private String getTokenFromRequest(HttpServletRequest request) {
         final String authHeader=request.getHeader(HttpHeaders.AUTHORIZATION);
 
-        if(StringUtils.hasText(authHeader) && authHeader.startsWith("Bearer "))
-        {
+        if(StringUtils.hasText(authHeader) && authHeader.startsWith("Bearer ")) {
             return authHeader.substring(7);
         }
         return null;
