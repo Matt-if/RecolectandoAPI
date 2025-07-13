@@ -41,10 +41,10 @@ public class SecurityConfig_Prod {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Enable CORS
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authRequest -> authRequest
-                        .requestMatchers("/auth/login", "/auth/refresh").permitAll()
+                        .requestMatchers("/auth/login", "/auth/refresh", "/analytics/**").permitAll()
                         .requestMatchers("/auth/register").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/buildings/**").authenticated()
-                        .requestMatchers(HttpMethod.POST, "/buildings/**").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/buildings/**").hasAuthority("ADMIN")
                         .requestMatchers("/retrievals/**").hasAnyAuthority("ADMIN", "USER") // podria dividirse mas para limitar al usuario comun
                         .anyRequest().authenticated()
                 )
@@ -62,7 +62,7 @@ public class SecurityConfig_Prod {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of(urlFront)); // Your frontend URL
+        configuration.setAllowedOrigins(List.of(urlFront));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
