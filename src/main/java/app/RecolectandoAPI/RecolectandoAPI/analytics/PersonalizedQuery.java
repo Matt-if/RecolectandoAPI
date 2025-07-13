@@ -19,7 +19,7 @@ public class PersonalizedQuery {
     private String name;
 
     @Lob // To allow long queries
-    @Column(nullable = false)
+    @Column(length = 256, nullable = false)
     private String queryText;
 
     private String description;
