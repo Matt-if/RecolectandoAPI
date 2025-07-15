@@ -22,8 +22,8 @@ public class AnalyticsService {
         return jdbcTemplate.queryForList(pq.getQueryText(), params); // the format returned is like `List<Map<String, Object>>`.
     }
 
-    public List<Map<String,Object>> weightOfWasteTypeBySector(RetrievalType type) {
-        return runPersonalizedQuery(1L, type.ordinal());
+    public List<Map<String,Object>> kgOfWasteTypeBySectorYearMonth(RetrievalType type, Integer year, Integer month) {
+        return runPersonalizedQuery(2L, type.ordinal(), year, year, month, month);
         //if type is sent, toString() is applied automatically to the enum,
         // but we need the ordinal value, which is the number saved on the DB.
     }

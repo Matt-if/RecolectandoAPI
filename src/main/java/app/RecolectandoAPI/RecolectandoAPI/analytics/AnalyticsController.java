@@ -7,10 +7,7 @@ import app.RecolectandoAPI.RecolectandoAPI.entities.retrieval.RetrievalType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,16 +18,16 @@ import java.util.stream.Collectors;
 public class AnalyticsController {
     private final AnalyticsService analyticsService;
 
-    //id 1 = query weight-wasteType-by-sector
-    // disadvantage is that the requester should know RetrievalType enum values
-    @GetMapping("/weight-wasteType-by-sector/{type}")
-    public ResponseEntity<ApiResponse> weightOfWasteTypeBySector(@PathVariable final String type) {
-
+    @GetMapping("/weight-wasteType-by-sector")
+    public ResponseEntity<ApiResponse> weightOfWasteTypeBySector(
+                                                                @RequestParam String type,
+                                                                @RequestParam(required = false) Integer year,
+                                                                @RequestParam(required = false) Integer month ) {
         try {
             if (!List.of(RetrievalType.values()).toString().contains(type))
                 throw new IllegalArgumentException("Tipo de residuo no existente: " + type );
 
-            List<DTO> results = analyticsService.weightOfWasteTypeBySector(RetrievalType.valueOf(type)).stream()
+            List<DTO> results = analyticsService.kgOfWasteTypeBySectorYearMonth(RetrievalType.valueOf(type), year, month).stream()
                     .map(ToDTO::analyticsResult)
                     .collect(Collectors.toList());
 
