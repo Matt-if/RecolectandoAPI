@@ -24,7 +24,7 @@ import java.util.List;
 @EnableWebSecurity
 @RequiredArgsConstructor
 @Profile("local")
-public class LocalTestSecurityConfig {
+public class SecurityConfig_LocalTesting {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final AuthenticationProvider authProvider;
