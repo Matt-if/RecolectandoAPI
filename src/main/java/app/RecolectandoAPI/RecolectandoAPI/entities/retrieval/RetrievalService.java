@@ -41,7 +41,7 @@ public class RetrievalService {
 
     public List<Retrieval> listAll() {
         try {
-            return retrievalRepo.findAll();
+            return retrievalRepo.findAllByDeleted(false); //antes usaba findAll() y despues filtraba en el controller
         }
          catch (Exception e) {
             throw new RuntimeException("Error al listar recolecciones: " + e.getMessage());

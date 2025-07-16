@@ -2,6 +2,7 @@ package app.RecolectandoAPI.RecolectandoAPI.analytics;
 
 import app.RecolectandoAPI.RecolectandoAPI.entities.retrieval.RetrievalType;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -18,8 +19,7 @@ public class AnalyticsService {
         PersonalizedQuery pq = personalizedQueryRepo.findById(queryId)
                 .orElseThrow(() -> new RuntimeException("Query not found"));
 
-        // NOTE: For real systems, make sure the query is safe to execute!
-        return jdbcTemplate.queryForList(pq.getQueryText(), params); // the format returned is like `List<Map<String, Object>>`.
+        return jdbcTemplate.queryForList(pq.getQueryText(), params); // format returned is like `List<Map<String, Object>>`.
     }
 
     public List<Map<String,Object>> kgOfWasteTypeBySectorYearMonth(RetrievalType type, Integer year, Integer month) {
