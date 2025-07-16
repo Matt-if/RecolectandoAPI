@@ -2,7 +2,6 @@ package app.RecolectandoAPI.RecolectandoAPI.config;
 
 import app.RecolectandoAPI.RecolectandoAPI.entities.token.Token;
 import app.RecolectandoAPI.RecolectandoAPI.entities.token.TokenRepo;
-import app.RecolectandoAPI.RecolectandoAPI.entities.user.User;
 import app.RecolectandoAPI.RecolectandoAPI.errorHandling.JwtAuthenticationEntryPoint;
 import app.RecolectandoAPI.RecolectandoAPI.jwt.JwtAuthenticationFilter;
 import jakarta.servlet.http.HttpServletRequest;

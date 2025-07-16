@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid; // TESTEANDO su uso
 
 import java.util.List;
 import java.util.function.Function;
@@ -21,7 +22,7 @@ public class BuildingController {
     private final BuildingService buildingService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse> createBuilding(@RequestBody Building building) {
+    public ResponseEntity<ApiResponse> createBuilding(@Valid @RequestBody Building building) {
         try {
             Building b = buildingService.create(building);
             return ResponseEntity.status(HttpStatus.CREATED).body(

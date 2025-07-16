@@ -14,18 +14,21 @@ public class BuildingService {
     private final BuildingRepo buildingRepo;
     private final SectorRepo sectorRepo;
 
+    // Este metodo tendria que llamarse saveBuilding y ser usado para la creacion y la actualizacion.
+    // Ademas, por ese motivo, tenes que controlar si recibis el building con un id (para actualizar) y ver si existe
+    // si Viene sin id, se saltea ese checkeo obviamente
     public Building create(Building building) {
         try {
             Building b = buildingRepo.findByName(building.getName());
 
             if (b != null && !b.isDeleted()) {
-                throw new RuntimeException("El edificio ya existe!");
+                throw new RuntimeException("El edificio ya existe!"); //Ex para hacer!
             }
 
-            if (b.isDeleted()) {
+            if (b != null) {
                 b.setDeleted(false);
                 buildingRepo.save(b);
-                throw new RuntimeException("El edificio estaba eliminado, se recupero y se agrego nuevamente!");
+                throw new RuntimeException("El edificio estaba eliminado, se recupero y se agrego nuevamente!"); //CUESTIONABLE, ? POR QUE LANZAR EXC ?
             }
 
             return buildingRepo.save(building);
