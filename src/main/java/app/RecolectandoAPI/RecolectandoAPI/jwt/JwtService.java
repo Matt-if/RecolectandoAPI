@@ -43,8 +43,7 @@ public class JwtService {
         return (username.equals(user.getUsername()) && !isTokenExpired(token));
     }
 
-    private Claims getAllClaims(String token)
-    {
+    private Claims getAllClaims(String token) {
         return Jwts
                 .parser()
                 .verifyWith(getKey())
@@ -53,8 +52,7 @@ public class JwtService {
                 .getPayload();
     }
 
-    public <T> T getClaim(String token, Function<Claims,T> claimsResolver)
-    {
+    public <T> T getClaim(String token, Function<Claims,T> claimsResolver) {
         final Claims claims=getAllClaims(token);
         return claimsResolver.apply(claims);
     }
@@ -69,7 +67,6 @@ public class JwtService {
         return getExpiration(token).before(new Date());
     }
 
-    // -------------------------------------------- nuevo ------------------------
     public String generateAccessToken(User user) {
         return buildToken(user, ACCESS_TOKEN_EXPIRATION, "ACCESS");
     }
@@ -80,7 +77,6 @@ public class JwtService {
 
     private String buildToken( final User user, final long expiration, String usage) {
         return Jwts.builder()
-                .id(user.getId().toString())
                 .claims(Map.of("role", user.getRole(), "id", user.getId(), "usage", usage))
                 .subject(user.getUsername())
                 .issuedAt(new Date(System.currentTimeMillis()))
