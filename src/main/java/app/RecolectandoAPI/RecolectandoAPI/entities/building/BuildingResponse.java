@@ -1,5 +1,6 @@
-package app.RecolectandoAPI.RecolectandoAPI.entities.dtos;
+package app.RecolectandoAPI.RecolectandoAPI.entities.building;
 
+import app.RecolectandoAPI.RecolectandoAPI.entities.dtos.DTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,10 +12,9 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class BuildingDTO implements DTO{
+public class BuildingResponse implements DTO {
     private Long id;
     private String name;
     private String address;
-    private boolean deleted;
-    private List<SectorDTO> sectors; // antes -> String sectors;
+    private List<String> sectors_names;
 }

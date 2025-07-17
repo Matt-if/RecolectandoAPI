@@ -34,6 +34,7 @@ This repository provides RESTful services—including user authentication—and 
 | `/auth/login` | POST | User login, creates access & refresh token | No            |
 | `/auth/register` | POST | Registers a new user                       | Access Token  |
 | `/auth/refresh` | POST | Renews access token                        | Refresh token |
+
 All API requests and responses use standard JSON bodies.
 Tokens must be included per endpoint requirements (access or refresh token).
 ## 🛠 Technologies

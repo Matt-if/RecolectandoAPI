@@ -2,6 +2,8 @@ package app.RecolectandoAPI.RecolectandoAPI.entities.building;
 
 import app.RecolectandoAPI.RecolectandoAPI.entities.sector.Sector;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
@@ -10,7 +12,9 @@ import java.util.List;
 
 @Data
 @Entity
+@Builder
 @RequiredArgsConstructor
+@AllArgsConstructor
 @Table(name = "buildings")
 public class Building {
     @Id
@@ -23,10 +27,10 @@ public class Building {
     private String address;
 
     @Column(nullable = false)
-    private boolean deleted;
+    private boolean deleted = false;
 
     @OneToMany(mappedBy = "building", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Sector> sectors = new ArrayList<>(); //inicializacion nueva
+    private List<Sector> sectors = new ArrayList<>();
 
     public void addSector(Sector sector) {
         sector.setBuilding(this);
