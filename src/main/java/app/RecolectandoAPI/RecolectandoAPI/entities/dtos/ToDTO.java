@@ -9,7 +9,6 @@ import java.util.Map;
 
 public class ToDTO {
 
-
     public static RetrievalDTO retrieval(Retrieval retrieval){
         return RetrievalDTO.builder()
                 .id(retrieval.getId())
