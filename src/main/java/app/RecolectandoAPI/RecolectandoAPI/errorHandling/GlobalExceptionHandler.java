@@ -12,6 +12,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.HashMap;
 
@@ -36,38 +37,26 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(SectorAlreadyExistException.class)
     public ResponseEntity<ApiResponse> handleSectorAlreadyExists(SectorAlreadyExistException exception) {
 
-        var errors = new HashMap<String, String>();
-        var fieldName = "sector_name";
-        errors.put(fieldName, exception.getMessage());
-
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.builder().msg(errors.toString()).build());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ApiResponse.builder().msg(exception.getMessage()).build());
     }
 
     @ExceptionHandler(BuildingNotFoundException.class)
     public ResponseEntity<ApiResponse> handleBuildingNotFound(BuildingNotFoundException exception) {
 
-        var errors = new HashMap<String, String>();
-        var fieldName = "building_id";
-        errors.put(fieldName, exception.getMessage());
-
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.builder().msg(errors.toString()).build());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.builder().msg(exception.getMessage()).build());
     }
 
     @ExceptionHandler(BuildingAlreadyExistsException.class)
     public ResponseEntity<ApiResponse> handleBuildingAlreadyExistsException(BuildingAlreadyExistsException exception) {
 
-        var errors = new HashMap<String, String>();
-        var fieldName = "name";
-        errors.put(fieldName, exception.getMessage());
-
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(ApiResponse.builder().msg(errors.toString()).build());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ApiResponse.builder().msg(exception.getMessage()).build());
     }
 
     // excepciones por JSON mal formateado en el request
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ApiResponse> handleJsonParseError(HttpMessageNotReadableException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(ApiResponse.builder().msg("Error de parseo del JSON enviado, mas informacion: " + ex.getMessage()).build());
+                .body(ApiResponse.builder().msg("Error de parseo JSON, mas informacion: " + ex.getMessage()).build());
     }
 
     @ExceptionHandler(AccessDeniedException.class)
@@ -76,14 +65,27 @@ public class GlobalExceptionHandler {
                 .body(ApiResponse.builder().msg("No tienes permisos para acceder a este recurso").build());
     }
 
+    // excepciones por URL mal formateada en el request
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ApiResponse> handleTypeMismatchException(MethodArgumentTypeMismatchException ex) {
+        String paramName = ex.getName();
+        String receivedValue = ex.getValue() != null ? ex.getValue().toString() : "null";
+        String expectedType = ex.getRequiredType() != null ? ex.getRequiredType().getSimpleName() : "unknown";
+
+        String msg = String.format(
+                "Valor inválido para el parámetro '%s': '%s'. Se esperaba un valor de tipo %s.",
+                paramName, receivedValue, expectedType
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ApiResponse.builder().msg(msg).build());
+    }
+
+
     // Cualquier error no controlado
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleException(Exception ex) {
-        var errors = new HashMap<String, String>();
-        var fieldName = "message";
-        var errorMessage = "Ocurrio un error inesperado, consulte con el administrador o intente mas tarde.";
-        errors.put(fieldName, errorMessage);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponse(errors));
+    public ResponseEntity<ApiResponse> handleException(Exception ex) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(ApiResponse.builder().msg("Ocurrio un error inesperado, consulte con el administrador o intente mas tarde.").build());
     }
 }
 

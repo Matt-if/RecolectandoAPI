@@ -49,15 +49,18 @@ public class BuildingService {
 
             Sector s = sectorRepo.findByName(sR.getName());
 
-            if (b.isSectorAlreadyAdded(s.getName()) && !s.isDeleted()) {
-                throw new SectorAlreadyExistException();
-            }
+            if (s != null) {
+                //Sectors names can't repeat on same building
+                if (b.isSectorAlreadyAdded(s.getName()) && !s.isDeleted()) {
+                    throw new SectorAlreadyExistException();
+                }
 
-            if (b.isSectorAlreadyAdded(s.getName()) && s.isDeleted()) {
-                s.setDeleted(false);
-                sectorRepo.save(s);
-                return;
-            }
+                if (b.isSectorAlreadyAdded(s.getName()) && s.isDeleted()) {
+                    s.setDeleted(false);
+                    sectorRepo.save(s);
+                    return;
+                }
+        }
 
             b.addSector(sectorMapper.toSector(sR, b));
             buildingRepo.save(b);

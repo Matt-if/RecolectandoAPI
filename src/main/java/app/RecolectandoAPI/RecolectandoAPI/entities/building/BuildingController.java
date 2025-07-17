@@ -28,7 +28,7 @@ public class BuildingController {
         );
     }
 
-    @PostMapping("/{id}/addSector")
+    @PostMapping("/addSector/{id}")
     public ResponseEntity<ApiResponse> addSectorToBuilding(@PathVariable Long id, @Valid @RequestBody SectorRequest sR) {
 
         buildingService.addSector(id, sR);
@@ -41,7 +41,7 @@ public class BuildingController {
 
     }
 
-    @GetMapping("/{id}/sectors")
+    @GetMapping("/sectors/{id}")
     public ResponseEntity<ApiResponse> getSectorsFromOneBuildingById(@PathVariable Long id) {
 
         List<DTO> sectors = new ArrayList<>(buildingService.getSectorsFromOneBuildingById(id));

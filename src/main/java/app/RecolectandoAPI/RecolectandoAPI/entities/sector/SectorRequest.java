@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SectorRequest {
-    @NotNull(message = "El nombre es requerido")
+    private long id;
     @NotBlank(message = "El nombre no puede ser vacio")
     private String name;
 }
