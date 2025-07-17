@@ -4,6 +4,7 @@ import app.RecolectandoAPI.RecolectandoAPI.ApiResponse;
 import app.RecolectandoAPI.RecolectandoAPI.entities.dtos.DTO;
 import app.RecolectandoAPI.RecolectandoAPI.entities.dtos.ToDTO;
 import app.RecolectandoAPI.RecolectandoAPI.entities.sector.Sector;
+import app.RecolectandoAPI.RecolectandoAPI.entities.sector.SectorRequest;
 import app.RecolectandoAPI.RecolectandoAPI.errorHandling.PredeterminedErrorMsgs;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -32,41 +33,30 @@ public class BuildingController {
         );
     }
 
-    @PostMapping("/{id}/sector")
-    public ResponseEntity<ApiResponse> addSectorToBuilding(@PathVariable Long id, @RequestBody Sector sector) {
+    @PostMapping("/{id}/addSector")
+    public ResponseEntity<ApiResponse> addSectorToBuilding(@PathVariable Long id, @Valid @RequestBody SectorRequest sR) {
 
-        try {
-            buildingService.addSector(id, sector);
-            return ResponseEntity.status(HttpStatus.CREATED).body(
-                    ApiResponse.builder()
-                            .msg("Sector agregado exitosamente")
-                            //.data(List.of(ToDTO.sector(sector))) //provoca error porque se intenta pasar a dto con la variable sector que no corresponde a la agregada.
-                            .build()
-                );
-        }
-        catch (Exception e) {
-            return PredeterminedErrorMsgs.badRequestResponse((e.getMessage()));
-        }
+        buildingService.addSector(id, sR);
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+                ApiResponse.builder()
+                        .msg("Sector agregado exitosamente")
+                        //.data(List.of(ToDTO.sector(sector))) //provoca error porque se intenta pasar a dto con la variable sector que no corresponde a la agregada.
+                        .build()
+            );
+
     }
 
-    @GetMapping("/{id}/sector/summary")
-    public ResponseEntity<ApiResponse> listSummarySectorsFromBuilding(@PathVariable Long id) {
+    @GetMapping("/{id}/sectors")
+    public ResponseEntity<ApiResponse> getSectorsFromOneBuildingById(@PathVariable Long id) {
 
-        try {
-            List<DTO> sectors = buildingService.getSectors(id).stream()
-                    .map(ToDTO::summarySector)
-                    .collect(Collectors.toList());
+        List<DTO> sectors = new ArrayList<>(buildingService.getSectorsFromOneBuildingById(id));
 
-            return ResponseEntity.status(HttpStatus.CREATED).body(
-                    ApiResponse.builder()
-                            .msg("Sectores listados exitosamente")
-                            .data(sectors)
-                            .build()
-            );
-        }
-        catch (Exception e) {
-            return PredeterminedErrorMsgs.badRequestResponse((e.getMessage()));
-        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+                ApiResponse.builder()
+                        .msg("Sectores listados exitosamente")
+                        .data(sectors)
+                        .build()
+        );
     }
 
     @GetMapping
@@ -83,10 +73,11 @@ public class BuildingController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse> getBuildingById(@PathVariable Long id) {
+        BuildingResponse bR = buildingService.getBuildingById(id);
         return ResponseEntity.status(HttpStatus.OK).body(
                 ApiResponse.builder()
                         .msg("Edificio encontrado!")
-                        .data(List.of(buildingService.getBuildingById(id)))
+                        .data(List.of(bR))
                         .build()
         );
     }

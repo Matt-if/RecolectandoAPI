@@ -4,6 +4,8 @@ import app.RecolectandoAPI.RecolectandoAPI.analytics.AnalyticsResultDTO;
 import app.RecolectandoAPI.RecolectandoAPI.entities.retrieval.Retrieval;
 import app.RecolectandoAPI.RecolectandoAPI.entities.retrieval.RetrievalType;
 import app.RecolectandoAPI.RecolectandoAPI.entities.sector.Sector;
+import app.RecolectandoAPI.RecolectandoAPI.entities.sector.SectorDTO;
+import app.RecolectandoAPI.RecolectandoAPI.entities.sector.SectorSummaryDTO;
 import app.RecolectandoAPI.RecolectandoAPI.entities.user.User;
 
 import java.util.Map;

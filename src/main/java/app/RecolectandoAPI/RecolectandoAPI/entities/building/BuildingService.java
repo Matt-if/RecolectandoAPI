@@ -1,7 +1,6 @@
 package app.RecolectandoAPI.RecolectandoAPI.entities.building;
 
-import app.RecolectandoAPI.RecolectandoAPI.entities.sector.Sector;
-import app.RecolectandoAPI.RecolectandoAPI.entities.sector.SectorRepo;
+import app.RecolectandoAPI.RecolectandoAPI.entities.sector.*;
 import app.RecolectandoAPI.RecolectandoAPI.errorHandling.exceptions.BuildingNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,6 +14,7 @@ public class BuildingService {
     private final BuildingRepo buildingRepo;
     private final SectorRepo sectorRepo;
     private final BuildingMapper mapper;
+    private final SectorMapper sectorMapper;
 
     // Hay que controlar si recibis con id (para actualizar) y ver si existe
     // Si Viene sin id, se saltea ese checkeo obviamente
@@ -43,30 +43,25 @@ public class BuildingService {
         return buildingRepo.save(mapper.toBuilding(buildingRequest));
     }
 
-    public void addSector(Long id, Sector sector) {
-        try {
-            Optional<Building> building = buildingRepo.findById(id);
-            Sector s = sectorRepo.findByName(sector.getName());
-            if (building.isEmpty()) {
-                throw new RuntimeException("El edificio no existe!");
-            }
+    public void addSector(Long id, SectorRequest sR) {
 
-            if (building.get().isSectorAlreadyAdded(s.getName()) && !s.isDeleted()) {
+            Building b = buildingRepo.findById(id).orElseThrow(
+                    () -> new BuildingNotFoundException("El edificio no existe!"));
+
+            Sector s = sectorRepo.findByName(sR.getName());
+
+            if (b.isSectorAlreadyAdded(s.getName()) && !s.isDeleted()) {
                 throw new RuntimeException("El sector ya existe en el edificio!");
             }
 
-            if (building.get().isSectorAlreadyAdded(s.getName()) && s.isDeleted()) {
+            if (b.isSectorAlreadyAdded(s.getName()) && s.isDeleted()) {
                 s.setDeleted(false);
                 sectorRepo.save(s);
-                throw new RuntimeException("El sector estaba eliminado, se recupero y se agrego nuevamente!");
+                return;
             }
-            building.get().addSector(sector);
-            buildingRepo.save(building.get());
 
-        }
-        catch (Exception e) {
-            throw new RuntimeException("Error al agregar el sector, mas informacion: " + e.getMessage());
-        }
+            b.addSector(sectorMapper.toSector(sR, b));
+            buildingRepo.save(b);
     }
 
     public List<BuildingResponse> listAll() {
@@ -85,14 +80,14 @@ public class BuildingService {
 
     }
 
-    public List<Sector> getSectors(Long id) {
-        try {
-            return buildingRepo.findById(id).isPresent() ?
-                    buildingRepo.findById(id).get().getSectors().stream().filter(s -> !s.isDeleted()).toList()
-                    : null;
+    public List<SectorResponse> getSectorsFromOneBuildingById(Long id) {
+        Building b = buildingRepo.findById(id).orElseThrow(
+                () -> new BuildingNotFoundException("El edificio no existe!"));
 
-        } catch (Exception e) {
-            throw new RuntimeException("Error: " + e.getMessage());
-        }
+        return b.getSectors().stream()
+                .filter(s -> !s.isDeleted())
+                .map(sectorMapper::toSectorResponse)
+                .toList();
+
     }
 }

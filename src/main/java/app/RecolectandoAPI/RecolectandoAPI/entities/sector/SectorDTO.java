@@ -1,5 +1,7 @@
-package app.RecolectandoAPI.RecolectandoAPI.entities.dtos;
+package app.RecolectandoAPI.RecolectandoAPI.entities.sector;
 
+import app.RecolectandoAPI.RecolectandoAPI.entities.dtos.DTO;
+import app.RecolectandoAPI.RecolectandoAPI.entities.dtos.RetrievalDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,7 +13,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SectorDTO implements DTO{
+public class SectorDTO implements DTO {
     private long id;
     private String name;
     private boolean deleted;

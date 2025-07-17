@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.HashMap;
 
 @RestControllerAdvice
-@Primary // para indicar que primero debe pasar por aqui el manejo de la excepcion y luego al global.
-public class BuildingExceptionHandler extends GlobalExceptionHandler {
+//@Primary // para indicar que primero debe pasar por aqui el manejo de la excepcion y luego al global.
+public class BuildingExceptionHandler {
 
     @ExceptionHandler(BuildingNotFoundException.class)
     public ResponseEntity<ErrorResponse> handle (BuildingNotFoundException exception) {

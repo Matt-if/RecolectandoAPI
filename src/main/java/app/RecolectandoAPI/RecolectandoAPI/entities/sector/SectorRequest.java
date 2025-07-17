@@ -1,0 +1,19 @@
+package app.RecolectandoAPI.RecolectandoAPI.entities.sector;
+
+import app.RecolectandoAPI.RecolectandoAPI.entities.dtos.DTO;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class SectorRequest implements DTO {
+    @NotNull(message = "El nombre es requerido")
+    @NotBlank(message = "El nombre no puede ser vacio")
+    private String name;
+}

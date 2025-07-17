@@ -1,4 +1,4 @@
-package app.RecolectandoAPI.RecolectandoAPI.entities.building;
+package app.RecolectandoAPI.RecolectandoAPI.entities.sector;
 
 import app.RecolectandoAPI.RecolectandoAPI.entities.dtos.DTO;
 import lombok.AllArgsConstructor;
@@ -10,7 +10,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class BuildingSummaryDTO implements DTO {
-    private Long id;
+public class SectorResponse implements DTO {
+    private long id;
     private String name;
+    private long building_id;
 }
