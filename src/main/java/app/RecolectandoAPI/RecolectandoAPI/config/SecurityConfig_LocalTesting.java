@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -29,13 +30,10 @@ public class SecurityConfig_LocalTesting {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final AuthenticationProvider authProvider;
 
-    @Value("${url.frontLocal}")
-    private String urlFront;
-
     @Bean
     public SecurityFilterChain securityFilterChain (HttpSecurity http) throws Exception {
             return http
-                    .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Enable CORS
+                    .cors(Customizer.withDefaults()) // Enable CORS
                     .csrf(AbstractHttpConfigurer::disable)
                     .authorizeHttpRequests(authRequest -> authRequest
                             .requestMatchers("/**").permitAll()
@@ -49,16 +47,4 @@ public class SecurityConfig_LocalTesting {
                     .build();
         }
 
-        @Bean
-        public CorsConfigurationSource corsConfigurationSource() {
-            CorsConfiguration configuration = new CorsConfiguration();
-            configuration.setAllowedOrigins(List.of(urlFront)); // Your frontend URL
-            configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-            configuration.setAllowedHeaders(List.of("*"));
-            configuration.setAllowCredentials(true);
-
-            UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-            source.registerCorsConfiguration("/**", configuration);
-            return source;
-        }
 }

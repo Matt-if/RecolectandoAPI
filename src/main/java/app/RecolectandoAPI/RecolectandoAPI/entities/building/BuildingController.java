@@ -2,10 +2,7 @@ package app.RecolectandoAPI.RecolectandoAPI.entities.building;
 
 import app.RecolectandoAPI.RecolectandoAPI.ApiResponse;
 import app.RecolectandoAPI.RecolectandoAPI.entities.dtos.DTO;
-import app.RecolectandoAPI.RecolectandoAPI.entities.dtos.ToDTO;
-import app.RecolectandoAPI.RecolectandoAPI.entities.sector.Sector;
 import app.RecolectandoAPI.RecolectandoAPI.entities.sector.SectorRequest;
-import app.RecolectandoAPI.RecolectandoAPI.errorHandling.PredeterminedErrorMsgs;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,8 +11,6 @@ import jakarta.validation.Valid;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor

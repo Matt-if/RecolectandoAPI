@@ -6,14 +6,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class BuildingMapper {
 
-    public BuildingRequest toBuildingRequest(Building building){
-        return BuildingRequest.builder()
-                .id(building.getId())
-                .name(building.getName())
-                .address(building.getAddress())
-                .build();
-    }
-
     public BuildingResponse toBuildingResponse(Building building){
         return BuildingResponse.builder()
                 .id(building.getId())
@@ -27,7 +19,6 @@ public class BuildingMapper {
         return Building.builder()
                 .id(buildingRequest.getId())
                 .name(buildingRequest.getName())
-                .deleted(false)
                 .address(buildingRequest.getAddress())
                 .build();
     }
@@ -37,5 +28,6 @@ public class BuildingMapper {
         b.setName(bR.getName());
         b.setAddress(bR.getAddress());
     }
+
 
 }

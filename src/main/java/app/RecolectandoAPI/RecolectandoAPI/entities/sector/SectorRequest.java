@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SectorRequest implements DTO {
+public class SectorRequest {
     @NotNull(message = "El nombre es requerido")
     @NotBlank(message = "El nombre no puede ser vacio")
     private String name;
