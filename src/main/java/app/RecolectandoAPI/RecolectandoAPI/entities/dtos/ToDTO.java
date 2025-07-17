@@ -1,7 +1,6 @@
 package app.RecolectandoAPI.RecolectandoAPI.entities.dtos;
 
 import app.RecolectandoAPI.RecolectandoAPI.analytics.AnalyticsResultDTO;
-import app.RecolectandoAPI.RecolectandoAPI.entities.building.Building;
 import app.RecolectandoAPI.RecolectandoAPI.entities.retrieval.Retrieval;
 import app.RecolectandoAPI.RecolectandoAPI.entities.retrieval.RetrievalType;
 import app.RecolectandoAPI.RecolectandoAPI.entities.sector.Sector;
@@ -10,21 +9,6 @@ import app.RecolectandoAPI.RecolectandoAPI.entities.user.User;
 import java.util.Map;
 
 public class ToDTO {
-    public static BuildingDTO completeBuilding(Building building){
-        return BuildingDTO.builder()
-                .id(building.getId())
-                .name(building.getName())
-                .address(building.getAddress())
-                .sectors(building.getSectors().stream().map(ToDTO::completeSector).toList())
-                .build();
-    }
-
-    public static BuildingSummaryDTO summaryBuilding(Building building){
-        return BuildingSummaryDTO.builder()
-                .id(building.getId())
-                .name(building.getName())
-                .build();
-    }
 
     public static SectorDTO completeSector(Sector s) {
         return SectorDTO.builder()

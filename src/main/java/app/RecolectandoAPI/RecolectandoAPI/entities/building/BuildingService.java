@@ -2,6 +2,7 @@ package app.RecolectandoAPI.RecolectandoAPI.entities.building;
 
 import app.RecolectandoAPI.RecolectandoAPI.entities.sector.Sector;
 import app.RecolectandoAPI.RecolectandoAPI.entities.sector.SectorRepo;
+import app.RecolectandoAPI.RecolectandoAPI.errorHandling.exceptions.BuildingNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,29 +14,33 @@ import java.util.Optional;
 public class BuildingService {
     private final BuildingRepo buildingRepo;
     private final SectorRepo sectorRepo;
+    private final BuildingMapper mapper;
 
-    // Este metodo tendria que llamarse saveBuilding y ser usado para la creacion y la actualizacion.
-    // Ademas, por ese motivo, tenes que controlar si recibis el building con un id (para actualizar) y ver si existe
-    // si Viene sin id, se saltea ese checkeo obviamente
-    public Building create(Building building) {
-        try {
-            Building b = buildingRepo.findByName(building.getName());
+    // Hay que controlar si recibis con id (para actualizar) y ver si existe
+    // Si Viene sin id, se saltea ese checkeo obviamente
+    public Building saveBuilding(BuildingRequest buildingRequest) {
+       if (buildingRequest.getId() != null) {
+           Building b = buildingRepo.findById(buildingRequest.getId()).orElseThrow(
+                   () -> new BuildingNotFoundException("El edificio no existe!"));
 
-            if (b != null && !b.isDeleted()) {
-                throw new RuntimeException("El edificio ya existe!"); //Ex para hacer!
-            }
+           mapper.updateBuildingFromBuildingRequest(buildingRequest, b);
+           return buildingRepo.save(b);
+       }
+       else {
+           Building b = buildingRepo.findByName(buildingRequest.getName());
 
-            if (b != null) {
-                b.setDeleted(false);
-                buildingRepo.save(b);
-                throw new RuntimeException("El edificio estaba eliminado, se recupero y se agrego nuevamente!"); //CUESTIONABLE, ? POR QUE LANZAR EXC ?
-            }
+           if (b != null && !b.isDeleted()) {
+               throw new RuntimeException("El edificio ya existe!"); //Excep. para hacer!
+           }
 
-            return buildingRepo.save(building);
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
-        }
+           if (b != null) {
+               b.setDeleted(false);
+               buildingRepo.save(b);
+               return b;
+           }
+       }
+
+        return buildingRepo.save(mapper.toBuilding(buildingRequest));
     }
 
     public void addSector(Long id, Sector sector) {
@@ -64,26 +69,20 @@ public class BuildingService {
         }
     }
 
-    public List<Building> listAll() {
-        try {
-            return buildingRepo.findAll().stream()
-                    .filter(building -> !building.isDeleted())
-                    .toList();
-        } catch (Exception e) {
-            throw new RuntimeException("Error al listar edificios: " + e.getMessage());
-        }
+    public List<BuildingResponse> listAll() {
+        return buildingRepo.findAllByDeleted(false).stream()
+                .map(mapper::toBuildingResponse)
+                .toList();
     }
 
-    public Building listById(Long id) {
-        try {
-            Building building = buildingRepo.findById(id).orElseThrow();
-            if (!building.isDeleted()) return building;
+    public BuildingResponse getBuildingById(Long id) {
+        Building building = buildingRepo.findById(id).orElseThrow(
+                () -> new BuildingNotFoundException("El edificio no existe!"));
 
-            else throw new RuntimeException("El edificio se encuentra eliminado");
+        if (!building.isDeleted()) return mapper.toBuildingResponse(building);
 
-        } catch (Exception e) {
-            throw new RuntimeException("Error: " + e.getMessage());
-        }
+        else throw new RuntimeException("El edificio se encuentra eliminado");
+
     }
 
     public List<Sector> getSectors(Long id) {

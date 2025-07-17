@@ -21,6 +21,6 @@ public class BuildingExceptionHandler extends GlobalExceptionHandler {
         var fieldName = "building_id";
         errors.put(fieldName, exception.getMessage());
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(errors));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(errors));
     }
 }
