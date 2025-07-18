@@ -1,13 +1,11 @@
 package app.RecolectandoAPI.RecolectandoAPI.errorHandling;
 
 import app.RecolectandoAPI.RecolectandoAPI.ApiResponse;
-import app.RecolectandoAPI.RecolectandoAPI.errorHandling.exceptions.BuildingAlreadyExistsException;
-import app.RecolectandoAPI.RecolectandoAPI.errorHandling.exceptions.BuildingNotFoundException;
-import app.RecolectandoAPI.RecolectandoAPI.errorHandling.exceptions.EmailAlreadyRegisteredException;
-import app.RecolectandoAPI.RecolectandoAPI.errorHandling.exceptions.SectorAlreadyExistException;
+import app.RecolectandoAPI.RecolectandoAPI.errorHandling.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -58,6 +56,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ApiResponse.builder().msg(exception.getMessage()).build());
     }
 
+    @ExceptionHandler(UserDeletedException.class)
+    public ResponseEntity<ApiResponse> handleUserDeletedException(UserDeletedException exception) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ApiResponse.builder().msg(exception.getMessage()).build());
+    }
+
     // excepciones por JSON mal formateado en el request
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ApiResponse> handleJsonParseError(HttpMessageNotReadableException ex) {
@@ -86,6 +89,11 @@ public class GlobalExceptionHandler {
                 .body(ApiResponse.builder().msg(msg).build());
     }
 
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ApiResponse> handleAuthenticationException(AuthenticationException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(ApiResponse.builder().msg("Credenciales invalidas --> " + ex.getMessage()).build());
+    }
 
     // Cualquier error no controlado
     @ExceptionHandler(Exception.class)

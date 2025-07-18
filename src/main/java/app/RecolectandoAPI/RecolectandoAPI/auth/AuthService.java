@@ -7,6 +7,7 @@ import app.RecolectandoAPI.RecolectandoAPI.entities.user.User;
 import app.RecolectandoAPI.RecolectandoAPI.entities.user.UserRepo;
 import app.RecolectandoAPI.RecolectandoAPI.entities.user.UserRequest;
 import app.RecolectandoAPI.RecolectandoAPI.errorHandling.exceptions.EmailAlreadyRegisteredException;
+import app.RecolectandoAPI.RecolectandoAPI.errorHandling.exceptions.UserDeletedException;
 import app.RecolectandoAPI.RecolectandoAPI.jwt.JwtService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +34,7 @@ public class AuthService {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
         User user = userRepo.findByUsername(request.getUsername()).orElseThrow();
 
-        if (user.isDeleted()) { throw new RuntimeException("Este usuario ha sido inhabilitado, por favor contacte al administrador!"); }
+        if (user.isDeleted()) { throw new UserDeletedException(); }
 
         String accessToken = jwtService.generateAccessToken(user);
         String refreshToken = jwtService.generateRefreshToken(user);
