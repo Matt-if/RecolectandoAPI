@@ -29,10 +29,6 @@ public class ToDTO {
                 .build();
     }
 
-    public static UserDTO user(User user){
-        return null;
-    }
-
     public static AnalyticsResultDTO analyticsResult (Map<String,Object> map) {
         return AnalyticsResultDTO.builder()
                 .row(map)

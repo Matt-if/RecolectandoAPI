@@ -3,6 +3,7 @@ package app.RecolectandoAPI.RecolectandoAPI.errorHandling;
 import app.RecolectandoAPI.RecolectandoAPI.ApiResponse;
 import app.RecolectandoAPI.RecolectandoAPI.errorHandling.exceptions.BuildingAlreadyExistsException;
 import app.RecolectandoAPI.RecolectandoAPI.errorHandling.exceptions.BuildingNotFoundException;
+import app.RecolectandoAPI.RecolectandoAPI.errorHandling.exceptions.EmailAlreadyRegisteredException;
 import app.RecolectandoAPI.RecolectandoAPI.errorHandling.exceptions.SectorAlreadyExistException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,6 +50,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BuildingAlreadyExistsException.class)
     public ResponseEntity<ApiResponse> handleBuildingAlreadyExistsException(BuildingAlreadyExistsException exception) {
 
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ApiResponse.builder().msg(exception.getMessage()).build());
+    }
+
+    @ExceptionHandler(EmailAlreadyRegisteredException.class)
+    public ResponseEntity<ApiResponse> handleEmailAlreadyRegisteredException(EmailAlreadyRegisteredException exception) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ApiResponse.builder().msg(exception.getMessage()).build());
     }
 

@@ -1,5 +1,7 @@
 package app.RecolectandoAPI.RecolectandoAPI.auth;
 
+import app.RecolectandoAPI.RecolectandoAPI.entities.user.UserRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -29,14 +31,9 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest request) {
-        try {
-            AuthResponse answer = authService.register(request);
-            return ResponseEntity.status(HttpStatus.OK).body(answer);
-        }
-        catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(AuthResponse.builder().msg(e.getMessage()).build());
-        }
+    public ResponseEntity<AuthResponse> register(@Valid @RequestBody UserRequest request) {
+        AuthResponse answer = authService.register(request);
+        return ResponseEntity.status(HttpStatus.OK).body(answer);
     }
 
     // Si el usuario recurrio a este endpoint es porque se le EXPIRO el ACCESS TOKEN

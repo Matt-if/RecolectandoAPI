@@ -5,6 +5,8 @@ import app.RecolectandoAPI.RecolectandoAPI.entities.token.TokenRepo;
 import app.RecolectandoAPI.RecolectandoAPI.entities.user.Role;
 import app.RecolectandoAPI.RecolectandoAPI.entities.user.User;
 import app.RecolectandoAPI.RecolectandoAPI.entities.user.UserRepo;
+import app.RecolectandoAPI.RecolectandoAPI.entities.user.UserRequest;
+import app.RecolectandoAPI.RecolectandoAPI.errorHandling.exceptions.EmailAlreadyRegisteredException;
 import app.RecolectandoAPI.RecolectandoAPI.jwt.JwtService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -46,10 +48,10 @@ public class AuthService {
                 .build();
     }
 
-    public AuthResponse register(RegisterRequest request) {
+    public AuthResponse register(UserRequest request) {
 
         if (userRepo.findByUsername(request.getUsername()).isPresent()) {
-            throw new RuntimeException("Email ya registrado! Elige otro por favor");
+            throw new EmailAlreadyRegisteredException();
         }
 
         User user = buildUser(request);
@@ -124,7 +126,7 @@ public class AuthService {
         }
     }
 
-    private User buildUser(RegisterRequest request) {
+    private User buildUser(UserRequest request) {
         return User.builder()
                 .username(request.getUsername())
                 .password(passwordEncoder.encode(request.getPassword()))
