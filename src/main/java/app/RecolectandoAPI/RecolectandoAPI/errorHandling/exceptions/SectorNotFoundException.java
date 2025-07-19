@@ -6,5 +6,12 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class SectorNotFoundException extends RuntimeException {
-  private final String message = "Sector no encontrado!";
+
+  public SectorNotFoundException(Long id) {
+    super("Sector no encontrado con id=" + id);
+  }
+
+  public SectorNotFoundException() {
+    super("Sector no encontrado");
+  }
 }

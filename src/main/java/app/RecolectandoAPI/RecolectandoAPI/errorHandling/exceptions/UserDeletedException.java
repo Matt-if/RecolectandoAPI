@@ -6,5 +6,11 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class UserDeletedException extends RuntimeException {
-    private final String message = "Este usuario ha sido inhabilitado, por favor contacte al administrador!";
+    public UserDeletedException(String username) {
+        super("El usuario " + username + " ha sido inhabilitado, por favor contacte al administrador");
+    }
+
+    public UserDeletedException() {
+        super("Usuario inhabilitado");
+    }
 }

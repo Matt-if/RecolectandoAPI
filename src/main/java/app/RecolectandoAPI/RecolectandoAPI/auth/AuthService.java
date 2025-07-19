@@ -34,7 +34,7 @@ public class AuthService {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
         User user = userRepo.findByUsername(request.getUsername()).orElseThrow();
 
-        if (user.isDeleted()) { throw new UserDeletedException(); }
+        if (user.isDeleted()) { throw new UserDeletedException(request.getUsername()); }
 
         String accessToken = jwtService.generateAccessToken(user);
         String refreshToken = jwtService.generateRefreshToken(user);

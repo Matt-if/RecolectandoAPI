@@ -21,7 +21,7 @@ public class BuildingService {
     // Si Viene sin id, se saltea ese checkeo obviamente
     public Building saveBuilding(BuildingRequest buildingRequest) {
        if (buildingRequest.getId() != null) {
-           Building b = buildingRepo.findById(buildingRequest.getId()).orElseThrow(BuildingNotFoundException::new);
+           Building b = buildingRepo.findById(buildingRequest.getId()).orElseThrow(() -> new BuildingNotFoundException(buildingRequest.getId()));
 
            mapper.updateBuildingFromBuildingRequest(buildingRequest, b);
            return buildingRepo.save(b);
@@ -30,7 +30,7 @@ public class BuildingService {
            Building b = buildingRepo.findByName(buildingRequest.getName());
 
            if (b != null && !b.isDeleted()) {
-               throw new BuildingAlreadyExistsException();
+               throw new BuildingAlreadyExistsException(b.getName());
            }
 
            if (b != null) {
@@ -45,25 +45,23 @@ public class BuildingService {
 
     public void addSector(Long id, SectorRequest sR) {
 
-            Building b = buildingRepo.findById(id).orElseThrow(BuildingNotFoundException::new);
+        Building b = buildingRepo.findById(id).orElseThrow(() -> new BuildingNotFoundException(id));
 
-            Sector s = sectorRepo.findByName(sR.getName());
+        Sector s = sectorRepo.findByNameAndBuilding_Id(sR.getName(), id); //Sectors names can repeat on different buildings
 
-            if (s != null) {
-                //Sectors names can't repeat on same building
-                if (b.isSectorAlreadyAdded(s.getName()) && !s.isDeleted()) {
-                    throw new SectorAlreadyExistException();
-                }
+        if (s != null) {
 
-                if (b.isSectorAlreadyAdded(s.getName()) && s.isDeleted()) {
-                    s.setDeleted(false);
-                    sectorRepo.save(s);
-                    return;
-                }
+            if (!s.isDeleted()) {
+                throw new SectorAlreadyExistException(sR.getName(), b.getName());
+            }
+
+            s.setDeleted(false);
+            sectorRepo.save(s);
+            return;
         }
 
-            b.addSector(sectorMapper.toSector(sR, b));
-            buildingRepo.save(b);
+        b.addSector(sectorMapper.toSector(sR, b));
+        buildingRepo.save(b);
     }
 
     public List<BuildingResponse> listAll() {
@@ -73,13 +71,13 @@ public class BuildingService {
     }
 
     public BuildingResponse getBuildingById(Long id) {
-        Building building = buildingRepo.findByIdAndDeleted(id, false).orElseThrow(BuildingNotFoundException::new);
+        Building building = buildingRepo.findByIdAndDeleted(id, false).orElseThrow(() -> new BuildingNotFoundException(id));
 
         return mapper.toBuildingResponse(building);
     }
 
     public List<SectorResponse> getSectorsFromOneBuildingById(Long id) {
-        Building b = buildingRepo.findById(id).orElseThrow(BuildingNotFoundException::new);
+        Building b = buildingRepo.findById(id).orElseThrow(() -> new BuildingNotFoundException(id));
 
         return b.getSectors().stream()
                 .filter(s -> !s.isDeleted())

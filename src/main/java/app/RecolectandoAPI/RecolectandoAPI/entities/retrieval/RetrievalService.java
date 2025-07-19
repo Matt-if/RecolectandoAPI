@@ -27,9 +27,9 @@ public class RetrievalService {
     // Por eso no hay control del ID.
     public Retrieval saveRetrieval(RetrievalRequest retrievalRequest) {
 
-        User user = userRepo.findById(retrievalRequest.getUser_id()).orElseThrow(UserNotFoundException::new);
+        User user = userRepo.findById(retrievalRequest.getUser_id()).orElseThrow(() -> new UserNotFoundException(retrievalRequest.getUser_id()));
 
-        Sector sector = sectorRepo.findById(retrievalRequest.getSector_id()).orElseThrow(SectorNotFoundException::new);
+        Sector sector = sectorRepo.findById(retrievalRequest.getSector_id()).orElseThrow(() -> new SectorNotFoundException(retrievalRequest.getSector_id()));
 
         return retrievalRepo.save(retrievalMapper.toRetrieval(retrievalRequest, user, sector));
     }

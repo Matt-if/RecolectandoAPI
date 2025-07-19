@@ -2,6 +2,7 @@ package app.RecolectandoAPI.RecolectandoAPI.errorHandling;
 
 import app.RecolectandoAPI.RecolectandoAPI.ApiResponse;
 import app.RecolectandoAPI.RecolectandoAPI.errorHandling.exceptions.*;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -104,6 +105,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse> handleAuthenticationException(AuthenticationException ex) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(ApiResponse.builder().msg("Credenciales invalidas --> " + ex.getMessage()).build());
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ApiResponse> handleResourceNotFoundException(ResourceNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(ApiResponse.builder().msg("Recurso no encontrado --> " + ex.getMessage()).build());
     }
 
     // Cualquier error no controlado
