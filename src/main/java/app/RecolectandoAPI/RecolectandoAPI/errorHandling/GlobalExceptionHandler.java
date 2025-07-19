@@ -39,6 +39,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ApiResponse.builder().msg(exception.getMessage()).build());
     }
 
+    @ExceptionHandler(SectorNotFoundException.class)
+    public ResponseEntity<ApiResponse> handleSectorAlreadyExists(SectorNotFoundException exception) {
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ApiResponse.builder().msg(exception.getMessage()).build());
+    }
+
     @ExceptionHandler(BuildingNotFoundException.class)
     public ResponseEntity<ApiResponse> handleBuildingNotFound(BuildingNotFoundException exception) {
 
@@ -59,6 +65,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UserDeletedException.class)
     public ResponseEntity<ApiResponse> handleUserDeletedException(UserDeletedException exception) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ApiResponse.builder().msg(exception.getMessage()).build());
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ApiResponse> handleUserNotFoundException(UserNotFoundException exception) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.builder().msg(exception.getMessage()).build());
     }
 
     // excepciones por JSON mal formateado en el request

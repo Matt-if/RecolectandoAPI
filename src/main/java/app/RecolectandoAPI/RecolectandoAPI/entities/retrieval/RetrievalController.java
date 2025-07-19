@@ -5,6 +5,7 @@ import app.RecolectandoAPI.RecolectandoAPI.entities.dtos.DTO;
 import app.RecolectandoAPI.RecolectandoAPI.entities.dtos.RetrievalDTO;
 import app.RecolectandoAPI.RecolectandoAPI.entities.dtos.ToDTO;
 import app.RecolectandoAPI.RecolectandoAPI.errorHandling.PredeterminedErrorMsgs;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,19 +21,14 @@ import java.util.stream.Collectors;
 public class RetrievalController {
     private final RetrievalService retrievalService;
 
-    //why RetrievalDTO ? --> because i request plain data, user_id instead of user for example
     @PostMapping()
-    public ResponseEntity<ApiResponse> createRetrieval(@RequestBody RetrievalDTO retrievalDto) {
-        try {
-            Retrieval r = retrievalService.create(retrievalDto);
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(ApiResponse.builder()
-                            .msg("Recoleccion creada exitosamente").build());
+    public ResponseEntity<ApiResponse> createRetrieval(@Valid @RequestBody RetrievalRequest retrievalRequest) {
 
-        }
-        catch (Exception e) {
-            return PredeterminedErrorMsgs.badRequestResponse((e.getMessage()));
-        }
+        Retrieval r = retrievalService.saveRetrieval(retrievalRequest);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ApiResponse.builder()
+                        .msg("Recoleccion creada exitosamente").build());
+
     }
 
     @GetMapping
