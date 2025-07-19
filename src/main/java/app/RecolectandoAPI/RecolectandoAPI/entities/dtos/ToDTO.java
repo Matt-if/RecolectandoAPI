@@ -2,8 +2,6 @@ package app.RecolectandoAPI.RecolectandoAPI.entities.dtos;
 
 import app.RecolectandoAPI.RecolectandoAPI.analytics.AnalyticsResultDTO;
 import app.RecolectandoAPI.RecolectandoAPI.entities.retrieval.Retrieval;
-import app.RecolectandoAPI.RecolectandoAPI.entities.retrieval.RetrievalType;
-import app.RecolectandoAPI.RecolectandoAPI.entities.user.User;
 
 import java.util.Map;
 
@@ -23,11 +21,6 @@ public class ToDTO {
                 .build();
     }
 
-    public static RetrievalTypeDTO retrievalType(RetrievalType r) {
-        return RetrievalTypeDTO.builder()
-                .type(r.name())
-                .build();
-    }
 
     public static AnalyticsResultDTO analyticsResult (Map<String,Object> map) {
         return AnalyticsResultDTO.builder()

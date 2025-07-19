@@ -33,37 +33,24 @@ public class RetrievalController {
 
     @GetMapping
     public ResponseEntity<ApiResponse> listAllRetrievals() {
-        try {
-            List<DTO> list = retrievalService.listAll().stream()
-                    .map(ToDTO::retrieval)
-                    .collect(Collectors.toList());
+        List<DTO> list = retrievalService.listAll();
 
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(ApiResponse.builder()
-                            .msg("Listado de recolecciones exitoso")
-                            .data(list)
-                    .build());
-        }
-        catch (Exception e) {
-            return PredeterminedErrorMsgs.badRequestResponse((e.getMessage()));
-        }
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ApiResponse.builder()
+                        .msg("Listado de recolecciones exitoso")
+                        .data(list)
+                .build());
     }
+
     @GetMapping("/types")
     public ResponseEntity<ApiResponse> listRetrievalTypes() {
-        try {
-            List<DTO> list = Arrays.stream(RetrievalType.values())
-                    .map(ToDTO::retrievalType)
-                    .collect(Collectors.toList());
+        List<DTO> list = retrievalService.listAllRetrievalTypes();
 
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(ApiResponse.builder()
-                            .msg("Listado de tipos de recoleccion exitoso")
-                            .data(list)
-                            .build());
-        }
-        catch (Exception e) {
-            return PredeterminedErrorMsgs.badRequestResponse((e.getMessage()));
-        }
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ApiResponse.builder()
+                        .msg("Listado de tipos de recoleccion exitoso")
+                        .data(list)
+                        .build());
     }
 
 }
