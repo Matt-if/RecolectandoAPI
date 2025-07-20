@@ -1,6 +1,6 @@
 package app.RecolectandoAPI.RecolectandoAPI.entities.dtos;
 
-import app.RecolectandoAPI.RecolectandoAPI.analytics.AnalyticsResultDTO;
+import app.RecolectandoAPI.RecolectandoAPI.analytics.AnalyticsResponse;
 import app.RecolectandoAPI.RecolectandoAPI.entities.retrieval.Retrieval;
 
 import java.util.Map;
@@ -22,11 +22,7 @@ public class ToDTO {
     }
 
 
-    public static AnalyticsResultDTO analyticsResult (Map<String,Object> map) {
-        return AnalyticsResultDTO.builder()
-                .row(map)
-                .build();
-    }
+
 
 
 }

@@ -10,6 +10,6 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AnalyticsResultDTO implements DTO {
+public class AnalyticsResponse implements DTO {
     private Map<String, Object> row = new HashMap<>();
 }

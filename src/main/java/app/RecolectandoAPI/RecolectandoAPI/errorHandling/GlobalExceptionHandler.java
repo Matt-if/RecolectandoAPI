@@ -9,9 +9,11 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.HashMap;
@@ -20,6 +22,7 @@ import java.util.HashMap;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    // Para validar campos enviados via JSON request.
     // Cuando un controller tira excepcion por el @Valid de jakarta. (ejemplo: te intentan crear un Building sin el field name)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiResponse> handleNotValidRequestsException(MethodArgumentNotValidException exception) {
@@ -32,6 +35,56 @@ public class GlobalExceptionHandler {
         });
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.builder().msg(errors.toString()).build());
+    }
+
+    //para validar parametros enviados por URL
+    // Por ejemplo --> /analytics/weight-wasteType-by-sector?type=RECICLABLE?year=2000
+    @ExceptionHandler(HandlerMethodValidationException.class)
+    public ResponseEntity<ApiResponse> handleNotValidRequestsException(HandlerMethodValidationException exception) {
+        var errors = new HashMap<String, String>();
+        exception.getParameterValidationResults().forEach(result -> {
+            // Each error implements MessageSourceResolvable, which gives access to the default message and the codes.
+            result.getResolvableErrors().forEach(error -> {
+                // Try to extract the parameter name from the codes (second code is usually the parameter name).
+                // Fallback if codes array is missing or empty.
+                String[] codes = error.getCodes();
+                String parameter = (codes != null && codes.length > 1) ? codes[1] : "parameter";
+                String message = error.getDefaultMessage();
+
+                errors.put(parameter, message);
+            });
+        });
+        // For example: {type=must not be blank}
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ApiResponse.builder().msg(errors.toString()).build());
+    }
+
+    // Esta excepcion es lanzada cuando un parametro requerido en una URL NO es enviado!
+    // Por ejemplo el type en /analytics/weight-wasteType-by-sector?type=RECICLABLE
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<ApiResponse> handleMissingServletRequestParameterException(MissingServletRequestParameterException exception) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.builder().msg(exception.getMessage()).build());
+    }
+
+    // excepciones por URL mal formateada en el request
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ApiResponse> handleTypeMismatchException(MethodArgumentTypeMismatchException ex) {
+        String paramName = ex.getName();
+        String receivedValue = ex.getValue() != null ? ex.getValue().toString() : "null";
+        String expectedType = ex.getRequiredType() != null ? ex.getRequiredType().getSimpleName() : "unknown";
+
+        String msg = String.format(
+                "Valor inválido para el parámetro '%s': '%s'. Se esperaba un valor de tipo %s.",
+                paramName, receivedValue, expectedType
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ApiResponse.builder().msg(msg).build());
+    }
+
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ApiResponse> handleIllegalArgumentException(IllegalArgumentException exception) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.builder().msg(exception.getMessage()).build());
     }
 
     @ExceptionHandler(SectorAlreadyExistException.class)
@@ -86,20 +139,6 @@ public class GlobalExceptionHandler {
                 .body(ApiResponse.builder().msg("No tienes permisos para acceder a este recurso").build());
     }
 
-    // excepciones por URL mal formateada en el request
-    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public ResponseEntity<ApiResponse> handleTypeMismatchException(MethodArgumentTypeMismatchException ex) {
-        String paramName = ex.getName();
-        String receivedValue = ex.getValue() != null ? ex.getValue().toString() : "null";
-        String expectedType = ex.getRequiredType() != null ? ex.getRequiredType().getSimpleName() : "unknown";
-
-        String msg = String.format(
-                "Valor inválido para el parámetro '%s': '%s'. Se esperaba un valor de tipo %s.",
-                paramName, receivedValue, expectedType
-        );
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(ApiResponse.builder().msg(msg).build());
-    }
 
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<ApiResponse> handleAuthenticationException(AuthenticationException ex) {
