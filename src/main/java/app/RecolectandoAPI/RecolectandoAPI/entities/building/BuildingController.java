@@ -1,7 +1,7 @@
 package app.RecolectandoAPI.RecolectandoAPI.entities.building;
 
 import app.RecolectandoAPI.RecolectandoAPI.ApiResponse;
-import app.RecolectandoAPI.RecolectandoAPI.entities.dtos.DTO;
+import app.RecolectandoAPI.RecolectandoAPI.DTO;
 import app.RecolectandoAPI.RecolectandoAPI.entities.sector.SectorRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

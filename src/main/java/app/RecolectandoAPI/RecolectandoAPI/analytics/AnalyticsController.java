@@ -1,13 +1,12 @@
 package app.RecolectandoAPI.RecolectandoAPI.analytics;
 
 import app.RecolectandoAPI.RecolectandoAPI.ApiResponse;
-import app.RecolectandoAPI.RecolectandoAPI.entities.dtos.DTO;
+import app.RecolectandoAPI.RecolectandoAPI.DTO;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.validator.constraints.Range;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -2,6 +2,7 @@ package app.RecolectandoAPI.RecolectandoAPI.errorHandling;
 
 import app.RecolectandoAPI.RecolectandoAPI.ApiResponse;
 import app.RecolectandoAPI.RecolectandoAPI.errorHandling.exceptions.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ import java.util.HashMap;
 
 @Component
 @RestControllerAdvice
+@Slf4j // para trabajar con el logger
 public class GlobalExceptionHandler {
 
     // Para validar campos enviados via JSON request.
@@ -34,6 +36,7 @@ public class GlobalExceptionHandler {
             errors.put(fieldName, errorMessage);
         });
 
+        log.warn("Validation errors: {}", exception.toString());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.builder().msg(errors.toString()).build());
     }
 
@@ -43,10 +46,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse> handleNotValidRequestsException(HandlerMethodValidationException exception) {
         var errors = new HashMap<String, String>();
         exception.getParameterValidationResults().forEach(result -> {
-            // Each error implements MessageSourceResolvable, which gives access to the default message and the codes.
             result.getResolvableErrors().forEach(error -> {
-                // Try to extract the parameter name from the codes (second code is usually the parameter name).
-                // Fallback if codes array is missing or empty.
                 String[] codes = error.getCodes();
                 String parameter = (codes != null && codes.length > 1) ? codes[1] : "parameter";
                 String message = error.getDefaultMessage();
@@ -155,6 +155,7 @@ public class GlobalExceptionHandler {
     // Cualquier error no controlado
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse> handleException(Exception ex) {
+        log.error("Error: {}", ex.toString());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(ApiResponse.builder().msg("Ocurrio un error inesperado, consulte con el administrador o intente mas tarde.").build());
     }

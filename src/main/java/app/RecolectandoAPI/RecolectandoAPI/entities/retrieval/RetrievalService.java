@@ -1,6 +1,6 @@
 package app.RecolectandoAPI.RecolectandoAPI.entities.retrieval;
 
-import app.RecolectandoAPI.RecolectandoAPI.entities.dtos.DTO;
+import app.RecolectandoAPI.RecolectandoAPI.DTO;
 import app.RecolectandoAPI.RecolectandoAPI.entities.sector.Sector;
 import app.RecolectandoAPI.RecolectandoAPI.entities.sector.SectorRepo;
 import app.RecolectandoAPI.RecolectandoAPI.entities.user.User;

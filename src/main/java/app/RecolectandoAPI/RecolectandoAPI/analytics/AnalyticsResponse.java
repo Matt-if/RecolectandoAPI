@@ -1,6 +1,6 @@
 package app.RecolectandoAPI.RecolectandoAPI.analytics;
 
-import app.RecolectandoAPI.RecolectandoAPI.entities.dtos.DTO;
+import app.RecolectandoAPI.RecolectandoAPI.DTO;
 import lombok.*;
 
 import java.util.HashMap;

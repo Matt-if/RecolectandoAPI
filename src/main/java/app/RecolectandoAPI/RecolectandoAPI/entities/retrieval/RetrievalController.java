@@ -1,19 +1,15 @@
 package app.RecolectandoAPI.RecolectandoAPI.entities.retrieval;
 
 import app.RecolectandoAPI.RecolectandoAPI.ApiResponse;
-import app.RecolectandoAPI.RecolectandoAPI.entities.dtos.DTO;
-import app.RecolectandoAPI.RecolectandoAPI.entities.dtos.RetrievalDTO;
-import app.RecolectandoAPI.RecolectandoAPI.entities.dtos.ToDTO;
-import app.RecolectandoAPI.RecolectandoAPI.errorHandling.PredeterminedErrorMsgs;
+import app.RecolectandoAPI.RecolectandoAPI.DTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 @RestController
 @RequestMapping("/retrievals")

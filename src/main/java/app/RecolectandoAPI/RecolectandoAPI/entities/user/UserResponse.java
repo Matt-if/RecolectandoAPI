@@ -1,6 +1,6 @@
 package app.RecolectandoAPI.RecolectandoAPI.entities.user;
 
-import app.RecolectandoAPI.RecolectandoAPI.entities.dtos.DTO;
+import app.RecolectandoAPI.RecolectandoAPI.DTO;
 
 public class UserResponse implements DTO {
     private Long id;
