@@ -12,11 +12,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BuildingRequest {
-    private Long id;
-
+    private Long id; // por el PUT
     @NotBlank(message = "El nombre no puede ser vacio")
     private String name;
-
     private String address;
 }
 

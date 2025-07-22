@@ -6,6 +6,12 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class SectorAlreadyExistException extends RuntimeException {
-    private final String message = "El sector ya existe!";
+    public SectorAlreadyExistException(String name, String buildingName) {
+        super("El sector: " + name + " ya existe en el edificio: " + buildingName);
+    }
+
+    public SectorAlreadyExistException() {
+        super();
+    }
 }
 

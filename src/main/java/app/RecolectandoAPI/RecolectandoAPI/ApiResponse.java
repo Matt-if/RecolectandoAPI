@@ -1,6 +1,5 @@
 package app.RecolectandoAPI.RecolectandoAPI;
 
-import app.RecolectandoAPI.RecolectandoAPI.entities.dtos.DTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

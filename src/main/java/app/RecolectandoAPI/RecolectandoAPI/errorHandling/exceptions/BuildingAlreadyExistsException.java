@@ -6,5 +6,11 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true) //indica que esta clase es subclase de otra y deben compararse todos los campos, incluidos los de la superclase.
 @Data
 public class BuildingAlreadyExistsException extends RuntimeException {
-    private final String message = "El edificio ya existe!";
+    public BuildingAlreadyExistsException(String name) {
+        super("El edificio: " + name + " ya existe!");
+    }
+
+    public BuildingAlreadyExistsException() {
+        super("El edificio ya existe!");
+    }
 }

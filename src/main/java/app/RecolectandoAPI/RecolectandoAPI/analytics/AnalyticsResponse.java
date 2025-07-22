@@ -1,6 +1,6 @@
 package app.RecolectandoAPI.RecolectandoAPI.analytics;
 
-import app.RecolectandoAPI.RecolectandoAPI.entities.dtos.DTO;
+import app.RecolectandoAPI.RecolectandoAPI.DTO;
 import lombok.*;
 
 import java.util.HashMap;
@@ -10,6 +10,6 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AnalyticsResultDTO implements DTO {
+public class AnalyticsResponse implements DTO {
     private Map<String, Object> row = new HashMap<>();
 }

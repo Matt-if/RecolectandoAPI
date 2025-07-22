@@ -20,8 +20,9 @@ public class Sector {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(unique = true, nullable = false)
+    // Antes name = unique porque me parecio A MI, pero salvo que el admin exprese lo contrario,
+    // pueden repetirse en edifcios DISTINTOS: ejemplo tener "Sector A" en edificio 1 y "Sector A" en edificio 2
+    @Column(nullable = false)
     private String name;
 
     @ManyToOne
