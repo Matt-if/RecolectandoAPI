@@ -9,6 +9,7 @@ import app.RecolectandoAPI.RecolectandoAPI.entities.user.UserRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import io.jsonwebtoken.Claims;
@@ -19,6 +20,7 @@ import io.jsonwebtoken.security.Keys;
 import javax.crypto.SecretKey;
 
 @Service
+@Component // agregado el 23/7 por PROBLEMAS al levantar el contenedor
 @RequiredArgsConstructor
 public class JwtService {
     private final UserRepo userRepo;
