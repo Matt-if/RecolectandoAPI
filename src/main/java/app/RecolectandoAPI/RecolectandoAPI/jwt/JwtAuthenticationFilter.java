@@ -22,7 +22,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 @Component
-@Service // agregado el 23/7 por PROBLEMAS al levantar el contenedor
+@Service
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     // OncePerRequestFilter se usa para crear filtros personalizados.

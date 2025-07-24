@@ -33,6 +33,6 @@ build/
 .vscode/
 
 ### info sensible ###
-src/main/resources/application.properties
 *.log
+*.gz
 *.yml

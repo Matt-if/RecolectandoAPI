@@ -23,7 +23,6 @@ import javax.crypto.SecretKey;
 @Component // agregado el 23/7 por PROBLEMAS al levantar el contenedor
 @RequiredArgsConstructor
 public class JwtService {
-    private final UserRepo userRepo;
 
     @Value("${jwt.secret.key}")
     private String SECRET_KEY;
