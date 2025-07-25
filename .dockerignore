@@ -1,0 +1,32 @@
+# Maven/Gradle build directories
+target/
+build/
+
+# IDE files
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Git
+.git/
+.gitignore
+
+# Docker (optionally ignore Docker compose, etc.)
+docker-compose.yml
+
+# Misc (test sources, docs, etc.)
+src/test/
+HELP.md
+README.md
+
+# Other files you never want in the image
+*.md
