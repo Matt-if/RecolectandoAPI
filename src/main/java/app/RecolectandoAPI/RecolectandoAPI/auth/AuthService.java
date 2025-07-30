@@ -25,7 +25,6 @@ public class AuthService {
     private final UserRepo userRepo;
     private final TokenRepo tokenRepo;
     private final JwtService jwtService;
-    private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
 
     public AuthResponse login(LoginRequest request) {
@@ -45,20 +44,6 @@ public class AuthService {
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .msg("Inicio de sesion exitoso!")
-                .build();
-    }
-
-    public AuthResponse register(UserRequest request) {
-
-        if (userRepo.findByUsername(request.getUsername()).isPresent()) {
-            throw new EmailAlreadyRegisteredException();
-        }
-
-        User user = buildUser(request);
-        userRepo.save(user);
-
-        return AuthResponse.builder()
-                .msg("Usuario registrado exitosamente!")
                 .build();
     }
 
@@ -124,15 +109,5 @@ public class AuthService {
             }
             tokenRepo.saveAll(validUserTokens);
         }
-    }
-
-    private User buildUser(UserRequest request) {
-        return User.builder()
-                .username(request.getUsername())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .firstname(request.getFirstname())
-                .lastname(request.getLastname())
-                .role(Role.USER)
-                .build();
     }
 }
