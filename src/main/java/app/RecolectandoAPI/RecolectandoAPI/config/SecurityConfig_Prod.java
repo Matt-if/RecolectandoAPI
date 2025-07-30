@@ -44,8 +44,8 @@ public class SecurityConfig_Prod {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authRequest -> authRequest
                         .requestMatchers("/auth/login", "/auth/refresh", "/analytics/**").permitAll()
-                        .requestMatchers("/auth/register").hasAuthority("ADMIN")
                         .requestMatchers("/actuator/**").hasAuthority("DEV")
+                        .requestMatchers(HttpMethod.POST, "/users/**").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/buildings/**").authenticated()
                         .requestMatchers(HttpMethod.POST, "/buildings/**").hasAuthority("ADMIN")
                         .requestMatchers("/retrievals/**").hasAnyAuthority("ADMIN", "USER") // podria dividirse mas para limitar al usuario comun

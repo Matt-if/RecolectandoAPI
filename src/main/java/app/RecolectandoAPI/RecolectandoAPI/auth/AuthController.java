@@ -21,11 +21,8 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.OK).body(answer);
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<AuthResponse> register(@Valid @RequestBody UserRequest request) {
-        AuthResponse answer = authService.register(request);
-        return ResponseEntity.status(HttpStatus.OK).body(answer);
-    }
+    // Previously, here was the /register enpoint but in this case, the act of “registering” is just “creating a new user”,
+    // so it fits CRUD (Create, Read, Update, Delete) for users, not auth.
 
     // Si el usuario recurrio a este endpoint es porque se le EXPIRO el ACCESS TOKEN
     // El refresh token debe incluirse en el header: authorization
