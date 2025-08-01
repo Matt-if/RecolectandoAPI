@@ -1,4 +1,4 @@
-package app.RecolectandoAPI.RecolectandoAPI.analytics;
+package app.RecolectandoAPI.RecolectandoAPI.entities.analytics;
 
 import org.springframework.stereotype.Service;
 
