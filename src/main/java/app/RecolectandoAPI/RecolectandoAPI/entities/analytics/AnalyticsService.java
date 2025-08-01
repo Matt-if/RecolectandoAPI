@@ -1,4 +1,4 @@
-package app.RecolectandoAPI.RecolectandoAPI.analytics;
+package app.RecolectandoAPI.RecolectandoAPI.entities.analytics;
 
 import app.RecolectandoAPI.RecolectandoAPI.DTO;
 import app.RecolectandoAPI.RecolectandoAPI.entities.retrieval.RetrievalType;
@@ -15,12 +15,12 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class AnalyticsService {
-    private final PersonalizedQueryRepo personalizedQueryRepo;
+    private final AnalyticsRepo analyticsRepo;
     private final JdbcTemplate jdbcTemplate;
     private final AnalyticsMapper analyticsMapper;
 
     public List<Map<String,Object>> runPersonalizedQuery(Long queryId, Object... params) {
-        PersonalizedQuery pq = personalizedQueryRepo.findById(queryId)
+        Analytics pq = analyticsRepo.findById(queryId)
                 .orElseThrow(() -> new RuntimeException("Query not found"));
 
         return jdbcTemplate.queryForList(pq.getQueryText(), params); // format returned is like `List<Map<String, Object>>`.

@@ -1,4 +1,4 @@
-package app.RecolectandoAPI.RecolectandoAPI.analytics;
+package app.RecolectandoAPI.RecolectandoAPI.entities.analytics;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @Entity
 @RequiredArgsConstructor
 @Table(name = "queries")
-public class PersonalizedQuery {
+public class Analytics {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

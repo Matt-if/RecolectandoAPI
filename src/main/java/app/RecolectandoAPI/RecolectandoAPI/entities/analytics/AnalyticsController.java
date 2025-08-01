@@ -1,4 +1,4 @@
-package app.RecolectandoAPI.RecolectandoAPI.analytics;
+package app.RecolectandoAPI.RecolectandoAPI.entities.analytics;
 
 import app.RecolectandoAPI.RecolectandoAPI.ApiResponse;
 import app.RecolectandoAPI.RecolectandoAPI.DTO;

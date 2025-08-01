@@ -13,41 +13,41 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataJpaTest
-public class UserRepoTest {
+public class UserRepoIntegrationTest {
     @Autowired
-    private UserRepo underTest;
-    private String email;
+    private UserRepo userRepo;
+    private String username;
     private User user;
 
     @BeforeEach
     void setUp() {
         //given
-        email = "johndoe@gmail.com";
-        user = User.builder().username(email).password("<Encoded PASSWORD>").role(Role.USER).build();
+        username = "johndoe@gmail.com";
+        user = User.builder().username(username).password("<Encoded PASSWORD>").role(Role.USER).build();
 
     }
 
     @AfterEach
     void tearDown() {
-        underTest.deleteAll();
+        userRepo.deleteAll();
     }
 
     @Test
-    void itShouldCheckIfUserExistsByUsername() {
+    void existsByUsernameTest() {
 
         //when
-        underTest.save(user);
-        boolean expected = underTest.existsByUsername(email);
+        userRepo.save(user);
+        boolean expected = userRepo.existsByUsername(username);
 
         //then
         assertTrue(expected);
     }
 
     @Test
-    void itShouldCheckIfUserDoesNotExistsByUsername() {
+    void notExistsByUsernameTest() {
 
         //when
-        boolean expected = underTest.existsByUsername(email);
+        boolean expected = userRepo.existsByUsername(username);
 
         //then
         assertFalse(expected);
