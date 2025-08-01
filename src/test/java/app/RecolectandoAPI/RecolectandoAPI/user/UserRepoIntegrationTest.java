@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataJpaTest
-public class UserRepoTest {
+public class UserRepoIntegrationTest {
     @Autowired
     private UserRepo userRepo;
     private String username;

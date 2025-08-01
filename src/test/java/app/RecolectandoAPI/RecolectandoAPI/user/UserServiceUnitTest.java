@@ -7,9 +7,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -19,12 +19,13 @@ class UserServiceUnitTest {
 
     @Mock
     private UserRepo userRepo;
+
+    // Realish implementation to avoid mocking the mapper
+    @Spy
+    private UserMapper userMapper = new UserMapper(new BCryptPasswordEncoder());
+
     @InjectMocks
     private UserService userService;
-
-    // Real implementation to avoid mocking the mapper
-    private final PasswordEncoder passwordEncoder = Mockito.mock(PasswordEncoder.class);
-    private final UserMapper userMapper = new UserMapper(passwordEncoder);
 
     private String username;
     private UserRequest userRequest;
@@ -43,24 +44,23 @@ class UserServiceUnitTest {
         // Arrange
         when(userRepo.existsByUsername(username)).thenReturn(false);
 
-        User mappedUser = userMapper.toUser(userRequest);
         User savedUser = User.builder()
                 .id(1L)
-                .username(username)
-                .password(mappedUser.getPassword())
-                .role(mappedUser.getRole())
+                .username(userRequest.getUsername())
+                .password(userRequest.getPassword())
+                .role(Role.USER)
                 .build();
 
         when(userRepo.save(any(User.class))).thenReturn(savedUser);
 
-        // Act
+        // When
         UserResponse result = userService.createUser(userRequest);
 
         // Assert
         assertNotNull(result);
-        assertEquals(1L, result.getId());
-        assertEquals(username, result.getUsername());
-        assertEquals(mappedUser.getRole(), result.getRole());
+        assertEquals(savedUser.getId(), result.getId());
+        assertEquals(savedUser.getUsername(), result.getUsername());
+        assertEquals(savedUser.getRole(), result.getRole());
         verify(userRepo, times(1)).save(any(User.class));
     }
 
