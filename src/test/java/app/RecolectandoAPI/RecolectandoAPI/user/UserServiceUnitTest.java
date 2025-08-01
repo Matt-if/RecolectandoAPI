@@ -27,15 +27,22 @@ class UserServiceUnitTest {
     @InjectMocks
     private UserService userService;
 
-    private String username;
+    private String username, pass;
+    private Long id;
+    private Role role;
     private UserRequest userRequest;
+    private User savedUser;
+    private UserResponse result;
 
     @BeforeEach
     void setUp() {
         username = "johndoe@gmail.com";
+        pass = "<PASSWORD>";
+        id = 1L;
+        role = Role.USER;
         userRequest = UserRequest.builder()
                 .username(username)
-                .password("<PASSWORD>")
+                .password(pass)
                 .build();
     }
 
@@ -44,23 +51,23 @@ class UserServiceUnitTest {
         // Arrange
         when(userRepo.existsByUsername(username)).thenReturn(false);
 
-        User savedUser = User.builder()
-                .id(1L)
-                .username(userRequest.getUsername())
-                .password(userRequest.getPassword())
-                .role(Role.USER)
+        savedUser = User.builder()
+                .id(id)
+                .username(username)
+                .password(pass)
+                .role(role)
                 .build();
 
         when(userRepo.save(any(User.class))).thenReturn(savedUser);
 
         // When
-        UserResponse result = userService.createUser(userRequest);
+        result = userService.createUser(userRequest);
 
         // Assert
         assertNotNull(result);
-        assertEquals(savedUser.getId(), result.getId());
-        assertEquals(savedUser.getUsername(), result.getUsername());
-        assertEquals(savedUser.getRole(), result.getRole());
+        assertEquals(id, result.getId());
+        assertEquals(username, result.getUsername());
+        assertEquals(role, result.getRole());
         verify(userRepo, times(1)).save(any(User.class));
     }
 
