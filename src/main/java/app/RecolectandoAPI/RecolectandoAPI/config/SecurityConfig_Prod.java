@@ -44,7 +44,7 @@ public class SecurityConfig_Prod {
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authRequest -> authRequest
-                        .requestMatchers("/auth/login", "/auth/refresh", "/analytics/**").permitAll()
+                        .requestMatchers("/auth/login", "/auth/refresh", "/analytics/**", "/actuator/health", "/actuator/health/**").permitAll()
                         .requestMatchers("/actuator/**").hasAuthority("DEV")
                         .requestMatchers(HttpMethod.POST, "/users/**").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/buildings/**").authenticated()
