@@ -34,13 +34,11 @@ public class UserControllerUnitTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-
     private String username, pass;
     private Long id;
     private Role role;
-    private UserRequest userRequest, wrongUserRequest;
-    private UserResponse createdUser, createdUser2;
-    private User retrievedUser;
+    private UserRequest userRequest;
+    private UserResponse createdUser;
 
     @BeforeEach
     void setUp() {

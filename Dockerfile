@@ -16,6 +16,11 @@ FROM eclipse-temurin:17-jre
 # Set the working directory
 WORKDIR /app
 
+# This was added later to install curl for health checks
+RUN apt-get update \
+	&& apt-get install -y --no-install-recommends curl \
+	&& rm -rf /var/lib/apt/lists/*
+
 # Copy the JAR file from the builder stage
 COPY --from=builder /app/target/*.jar app.jar
 

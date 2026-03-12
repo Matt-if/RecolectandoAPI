@@ -30,3 +30,11 @@ README.md
 
 # Other files you never want in the image
 *.md
+
+#Ignore environment variable files
+.env
+.env.prod
+.env.local
+.env.development
+.env.test
+.env.production
